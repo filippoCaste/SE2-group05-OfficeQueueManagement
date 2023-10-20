@@ -1,8 +1,10 @@
-# React + Vite
+# Page "OQM"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## React Client Application Routes
 
-Currently, two official plugins are available:
+- Route `/`: it shows user page
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Main React Components
+
+- `UserPage` : A page that shows the preview of the user page with its content
+- `OfficePage`: A page that shows the preview of the office page with its content
