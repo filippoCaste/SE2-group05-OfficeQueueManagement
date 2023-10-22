@@ -4,6 +4,7 @@ import  NotFoundPage  from './pages/NotFoundPage';
 import MainPage from './pages/MainPage';
 import { LoginForm } from './components/AuthComponents';
 import BackOfficeLayout from './pages/BackOfficeLayout';
+import GetTicketComponent from './components/GetTicketComponent';
 import API from './API';
 import { Row, Alert } from 'react-bootstrap';
 import ErrorContext from './errorContext';
@@ -131,6 +132,9 @@ function App() {
                 )
               }
             />
+
+            <Route path="/getTicket" element={<GetTicketComponent/>} />
+
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

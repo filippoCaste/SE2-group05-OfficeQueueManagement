@@ -2,7 +2,8 @@
 
 ## React Client Application Routes
 
-- Route `/`: it shows user pageee
+- Route `/`: it shows user page
+- Route '/getTicket': page to select the ticket for the wanted service 
 
 
 
