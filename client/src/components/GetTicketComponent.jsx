@@ -11,31 +11,38 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
+//import API from '/API'
+
 function GetTicketComponent(props)
 {
     const [selectedService, setSelectedService] = useState(null);
-    const services = ['Service 1: shipping', 'Service 2: accounts management', 'Service 3: something']; //servizi di prova
+
+    // eslint-disable-next-line react/prop-types
+    let services=Array.from(props.listServices);
+
+    // eslint-disable-next-line react/prop-types
+    let counters=Array.from(props.listCounters);
 
     const [selectedTicket, setSelectedTicket] = useState(false);
-    const [numberTicket, setNumberTicket] = useState(0);  
-    
+    const [numberTicket, setNumberTicket] = useState(null);  
+
+         
     const handleItemClick = (service) => 
     {
-       setSelectedService(service);
-       
-       //LOGICAL FLOW
-       //Tramite service.id ricavare(join) quale counter è associato ad esso,
-       //quindi poi dal counter corrispondente ricavare il valore (numero) del ticket corrente.
-       //inviare tramite valore al lato client.
-       //tale valore verrà mostrato qui
-
-       //Using service.id to obtain (join) which counter is associated with it,
-       //then from the corresponding counter obtain the value (number) of the current ticket.
-       //send via value to client side.
-       //that value will be shown here
-
-       setNumberTicket(()=>numberTicket+1); //PROVA FALSA LOCALE 
+       setSelectedService(service.serviceName);
        setSelectedTicket(()=>true)
+
+       let i=0;
+       let find=false;
+       while((i < counters.length)&&(find==false))
+       {
+          if(counters[i].id==service.id_counter)
+              find=true;
+          else
+              i=i+1;
+       }
+       setNumberTicket((q)=> counters[i].value_number);
+
     };
   
     return (
@@ -49,9 +56,9 @@ function GetTicketComponent(props)
             button
             key={index}
             selected={selectedService === item}
-            onClick={() => handleItemClick(item)}
+            onClick={() => handleItemClick(item,counters)}
           >
-            <ListItemText primary={item} />
+            <ListItemText primary={item.serviceName} />
           </ListItem>
         ))}
       </List>

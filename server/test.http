@@ -1,0 +1,11 @@
+GET http://localhost:3001/api/noEnqueued/1 HTTP/1.1
+
+###
+
+GET http://localhost:3001/api/noServed/1 HTTP/1.1
+
+###
+Get http://localhost:3001/api/services
+
+###
+Get http://localhost:3001/api/counters

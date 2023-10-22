@@ -14,13 +14,10 @@ function MainPage(props) {
   const [isLoading, setIsLoading] = useState(false);
   
   const handleClick = () => {
-    // Simulate an async operation, e.g., fetching data
-    setIsLoading(true);
-
-    // Simulate the completion of the async operation after a delay
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);};
+  
+    navigate("/getTicket");
+  
+  }
 
   return (
     <Container>

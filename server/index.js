@@ -3,11 +3,12 @@
 const express = require("express"); // The core Express module that allows you to create a simple and extensible web server web framework
 const morgan = require("morgan"); //  A logging middleware that logs HTTP requests to the console.
 const cors = require("cors"); //  A middleware that enables Cross-Origin Resource Sharing, allowing requests from different origins.
-const { check, validationResult } = require("express-validator"); //  A validation middleware that provides functions for validating and sanitizing input data.
+const { check, validationResult, param } = require("express-validator"); //  A validation middleware that provides functions for validating and sanitizing input data.
 const dayjs = require("dayjs"); //dayjs module
 
 const ticketDao = require("./dao-tickets"); // module for accessing the tickets table in the DB
 const userDao = require("./dao-users"); // module for accessing the user table in the DB
+const serviceDao = require("./dao-services"); // module for accessing the user table in the DB
 
 /*** init express and set up the middlewares ***/
 const app = express(); // application object app
@@ -144,6 +145,47 @@ app.get(
     }
   }
 );
+
+/**
+ * @returns the number of enqueued tickets before the last one
+ */
+app.get("/api/noEnqueued/:serviceId", async (req,res) => {
+  try {
+    const result = await ticketDao.getNumberOfEnqueuedTicketsPerService(req.params.serviceId);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+app.get("/api/noServed/:serviceId", async (req,res) => {
+  try {
+    const result = await ticketDao.getNumberOfServedTicketsPerService(req.params.serviceId);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+app.get("/api/services", async (req, res) => {
+  try {
+    const services = await serviceDao.getServices();
+    res.json(services);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+app.get("/api/counters", async (req, res) => {
+  try {
+    const counters = await serviceDao.getCounters();
+    res.json(counters);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 
 /*
 // 2. Retrieve the list of all the available publicated ticketss.

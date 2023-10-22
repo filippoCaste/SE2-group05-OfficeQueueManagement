@@ -33,6 +33,37 @@ exports.getTickets = () => {
   });
 };
 
+/**
+ * @returns the number of tickets that *are in the queue*, according to the serviceId
+ */
+exports.getNumberOfEnqueuedTicketsPerService = (serviceId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT COUNT(DISTINCT id) AS cnt FROM tickets WHERE workerid=0 AND serviceid=? GROUP BY id; ";
+    db.get(sql, [serviceId], (err,row) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(row.cnt);
+        }
+      });
+    });
+}
+/**
+ * @returns the number of tickets that have been *served*, according to the serviceId
+ */
+exports.getNumberOfServedTicketsPerService = (serviceId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT COUNT(DISTINCT id) AS cnt FROM tickets WHERE closeddate<>'NULL' AND serviceid=? GROUP BY id; ";
+    db.get(sql, [serviceId], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row.cnt);
+      }
+    });
+  });
+}
+
 /*
 // This function retrieves the whole list of tickets from the database.
 exports.getPublicatedtickets = () => {

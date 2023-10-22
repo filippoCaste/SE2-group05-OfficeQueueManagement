@@ -19,6 +19,11 @@ function App() {
   const [loggedin, setLoggedin] = useState(false); 
   const [message, setMessage] = useState('');
 
+  ///////////////////////
+  const [listServices, setListServices] = useState({});
+  const [listCounters, setListCounters] = useState({});
+
+
     // If an error occurs, the error message will be shown
   const handleErrors = (err) => {
       let msg = '';
@@ -83,6 +88,22 @@ function App() {
       },[]);
 
 
+  /////////////////////////////////////////////
+
+  useEffect(()=>{
+    
+    //GET ALL SERVICES
+     API.getAllServices()
+    .then((q)=>setListServices(q))
+    .catch((err) => handleErrors(err));
+
+     //GET ALL COUNTERS
+     API.getAllCounters()
+    .then((q)=>setListCounters(q))
+    .catch((err) => handleErrors(err));
+    
+  },[]);
+
 
   return (
     <Container
@@ -133,7 +154,8 @@ function App() {
               }
             />
 
-            <Route path="/getTicket" element={<GetTicketComponent/>} />
+            <Route path="/getTicket" 
+                element={<GetTicketComponent listServices={listServices} listCounters={listCounters} />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>

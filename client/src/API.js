@@ -97,6 +97,37 @@ const logout = async () => {
 };
 
 // Tickets APIs
+async function getAllServices() {
+  // call  /api/services
+  const response = await fetch(SERVER_URL+'/services');
+  const questions = await response.json();
+
+  if (response.ok) 
+  {
+    return questions.map((e) => ({  id: e.id,  serviceName: e.serviceName, id_counter: e.id_counter}))
+  } 
+  else 
+  {
+    throw questions; 
+  }
+}
+
+
+async function getAllCounters() {
+  // call  /api/counters
+  const response = await fetch(SERVER_URL+'/counters');
+  const questions = await response.json();
+
+  if (response.ok) 
+  {
+    return questions.map((e) => ({  id: e.id_counter,  value_number: e.value_number}))
+  } 
+  else 
+  {
+    throw questions; 
+  }
+}
+
 
 const getTickets = async () => {
   try {
@@ -468,6 +499,8 @@ const API = {
   getUserInfo,
   getUsers,
   getTickets,
+  getAllServices,
+  getAllCounters
 };
 
 export default API;
