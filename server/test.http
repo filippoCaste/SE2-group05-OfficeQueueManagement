@@ -11,4 +11,4 @@ Get http://localhost:3001/api/services
 Get http://localhost:3001/api/counters
 
 ###
-Get http://localhost:3001/api/counters/1
+Get http://localhost:3001/api/counters/2
