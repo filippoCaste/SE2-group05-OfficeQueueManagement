@@ -8,15 +8,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
 function MainPage(props) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handleClick = () => {
-  
     navigate("/getTicket");
-  
   }
 
   return (
@@ -49,5 +46,4 @@ function MainPage(props) {
     </Container>
   );
 }
-
 export default MainPage;

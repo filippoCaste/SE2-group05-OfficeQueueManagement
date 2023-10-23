@@ -11,7 +11,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-//import API from '/API'
+import API from '../API'
 
 function GetTicketComponent(props)
 {
@@ -20,29 +20,19 @@ function GetTicketComponent(props)
     // eslint-disable-next-line react/prop-types
     let services=Array.from(props.listServices);
 
-    // eslint-disable-next-line react/prop-types
-    let counters=Array.from(props.listCounters);
-
     const [selectedTicket, setSelectedTicket] = useState(false);
     const [numberTicket, setNumberTicket] = useState(null);  
 
          
-    const handleItemClick = (service) => 
+    const handleItemClick = async(service) => 
     {
        setSelectedService(service.serviceName);
        setSelectedTicket(()=>true)
 
-       let i=0;
-       let find=false;
-       while((i < counters.length)&&(find==false))
-       {
-          if(counters[i].id==service.id_counter)
-              find=true;
-          else
-              i=i+1;
-       }
-       setNumberTicket((q)=> counters[i].value_number);
-
+       //service.id_counter
+       await API.getCounterById(service.id_counter)
+       .then((q)=>setNumberTicket(q.value_number+" is your number ticket at the counter "+q.id_counter+" for the service "+service.serviceName))
+    
     };
   
     return (
@@ -56,15 +46,14 @@ function GetTicketComponent(props)
             button
             key={index}
             selected={selectedService === item}
-            onClick={() => handleItemClick(item,counters)}
+            onClick={() => handleItemClick(item)}
           >
             <ListItemText primary={item.serviceName} />
           </ListItem>
         ))}
       </List>
 
-      {selectedTicket?  
-           <h2> {numberTicket} is your number ticket for the service {selectedService} </h2>  :  <></>  }
+      {selectedTicket?  <h2> {numberTicket}  </h2>  :  <></>  }
 
     </> 
     );

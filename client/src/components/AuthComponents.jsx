@@ -18,7 +18,7 @@ function LoginForm(props) {
     props
       .login(credentials)
       .then(() => {
-        navigate('/tickets');
+        navigate('/');
       })
       .catch((err) => handleErrors(err));
   };
@@ -71,7 +71,7 @@ function LoginForm(props) {
           <Button type="submit" variant="contained" sx={{ px: 4 }}>
             Login
           </Button>
-          <Link to="../pages" style={{ textDecoration: 'none' }}>
+          <Link to="../" style={{ textDecoration: 'none' }}>
             <Button variant="contained" color="error" sx={{ px: 4 }}>
               Cancel
             </Button>

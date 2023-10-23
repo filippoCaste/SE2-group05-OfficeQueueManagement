@@ -53,3 +53,32 @@ exports.getCounters = () => {
         });
     });
 }
+
+/**
+ * @returns a counter by the id
+ */
+exports.getCounterById = (id) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM counters WHERE id_counter=?';
+      db.get(sql, [id], (err, row) => {
+        if (err) 
+        {
+          reject(err);
+          return;
+        }
+        if (row == undefined) 
+        {
+          resolve({error: 'Counter not found.'});
+        } 
+        else 
+        {
+          const counter = 
+          { 
+            id_counter: row.id_counter, 
+            value_number: row.value_number, 
+          };
+          resolve(counter);
+        }
+      });
+    });
+  };

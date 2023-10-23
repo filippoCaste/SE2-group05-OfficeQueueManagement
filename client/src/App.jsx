@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-
+import Sample from './pages/Sample';
 function App() {
   const [userLogged, setUserLogged] = useState({});            //used to store infos of the logged user
   const [loggedin, setLoggedin] = useState(false); 
@@ -21,7 +21,6 @@ function App() {
 
   ///////////////////////
   const [listServices, setListServices] = useState({});
-  const [listCounters, setListCounters] = useState({});
 
 
     // If an error occurs, the error message will be shown
@@ -52,7 +51,6 @@ function App() {
         throw err;
       }
     };
-
     const handleLogout = async () => {
       try{ 
       await API.logout();
@@ -91,17 +89,13 @@ function App() {
   /////////////////////////////////////////////
 
   useEffect(()=>{
-    
+
     //GET ALL SERVICES
      API.getAllServices()
     .then((q)=>setListServices(q))
     .catch((err) => handleErrors(err));
 
-     //GET ALL COUNTERS
-     API.getAllCounters()
-    .then((q)=>setListCounters(q))
-    .catch((err) => handleErrors(err));
-    
+
   },[]);
 
 
@@ -121,7 +115,6 @@ function App() {
               <>
                <Container fluid maxWidth="xl" >
                 <AppNavBar handleLogout={handleLogout} loggedin={loggedin} />
-
                   {message && (
                     <Box>
                       <Alert variant={message.type} onClose={() => setMessage('')} dismissible>
@@ -147,7 +140,7 @@ function App() {
               path="/"
               element={
                 loggedin ? (
-                  <BackOfficeLayout user={userLogged} />
+                  <Sample user={userLogged} />
                 ) : (
                   <MainPage />
                 )
@@ -155,7 +148,7 @@ function App() {
             />
 
             <Route path="/getTicket" 
-                element={<GetTicketComponent listServices={listServices} listCounters={listCounters} />} />
+                element={<GetTicketComponent listServices={listServices} />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>
@@ -165,5 +158,4 @@ function App() {
     </Container>
   );
 }
-
 export default App;
