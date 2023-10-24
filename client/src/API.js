@@ -225,6 +225,27 @@ const printTicketByServiceId = async (serviceId) => {
   }
 }
 
+const getAllTickets = async () => {
+  try {
+    const response = await fetch(SERVER_URL + `/getAllTickets`, {
+      method: "GET",
+    });
+    if (response.ok) {
+      const tickets = await response.json();
+      return tickets;
+    } else {
+      const errMessage = await response.json();
+      throw errMessage;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      throw { error: "Cannot parse server response" };
+    }
+  }
+}
+
 /*
 const getPublicatedtickets = async () => {
   try {
@@ -536,6 +557,7 @@ const API = {
   getTicketByServiceId,
   getCounterById,
   printTicketByServiceId,
+  getAllTickets,
 };
 
 export default API;

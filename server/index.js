@@ -189,6 +189,7 @@ app.get("/api/counters/:id", async (req, res) => {
 app.post("/api/printTicket/:serviceId", async (req,res) => {
   try {
     await ticketDao.printTicketByService(req.params.serviceId);
+    res.status(200).end();
   } catch (err) {
     res.status(500).json(err);
   }
@@ -200,7 +201,7 @@ app.post("/api/printTicket/:serviceId", async (req,res) => {
 app.get("/api/getAllTickets", async(req,res) => {
   try {
     const ticket = await ticketDao.getAllTickets();
-    res.json(ticket);
+    res.status(200).json(ticket);
   } catch(err) {
     res.status(500).json(err);
   }

@@ -15,29 +15,33 @@ import API from '../API'
 
 function GetTicketComponent(props)
 {
-    const [selectedService, setSelectedService] = useState(null);
+    const [selectedService, setSelectedService] = useState('');
 
     // eslint-disable-next-line react/prop-types
     let services=Array.from(props.listServices);
 
     const [selectedTicket, setSelectedTicket] = useState(false);
-    const [numberTicket, setNumberTicket] = useState(null);  
+    const [numberTicket, setNumberTicket] = useState('');  
 
          
     const handleItemClick = async(service) => 
     {
        setSelectedService(service.serviceName);
-       setSelectedTicket(()=>true)
 
        //service.id_counter
       //  await API.getCounterById(service.id_counter)
       //  .then((q)=>setNumberTicket(q.value_number+" is your number ticket at the counter "+q.id_counter+" for the service "+service.serviceName))
       
       // Add the ticket to the DB
-      await API.printTicketByServiceId(service.id);
-
-      setNumberTicket("You are in the queue now. Your ticket is number xx");
-        
+      API.printTicketByServiceId(service.id)
+      .then( () => {
+          API.getAllTickets()
+            .then((tks) => {
+              console.log(tks);
+              setNumberTicket(tks.length);
+              setSelectedTicket(true);
+            })
+          });
     };
   
     return (
@@ -58,7 +62,7 @@ function GetTicketComponent(props)
         ))}
       </List>
 
-      {selectedTicket?  <h2> {numberTicket}  </h2>  :  <></>  }
+      {selectedTicket?  <h2> Your ticket is: {numberTicket}  </h2>  :  <></>  }
 
     </> 
     );
