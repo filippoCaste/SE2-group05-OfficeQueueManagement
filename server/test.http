@@ -1,3 +1,5 @@
+
+
 GET http://localhost:3001/api/noEnqueued/1 HTTP/1.1
 
 ###
@@ -5,16 +7,19 @@ GET http://localhost:3001/api/noEnqueued/1 HTTP/1.1
 GET http://localhost:3001/api/noServed/1 HTTP/1.1
 
 ###
-Get http://localhost:3001/api/services
+GET http://localhost:3001/api/services HTTP/1.1
 
 ###
-Get http://localhost:3001/api/counters
+GET http://localhost:3001/api/counters HTTP/1.1
 
 ###
-Get http://localhost:3001/api/counters/2
+GET http://localhost:3001/api/counters/2 HTTP/1.1
 
 ###
-POST http://localhost:3001/api/printTicket/1
+POST http://localhost:3001/api/printTicket/1 HTTP/1.1
 
 ###
-GET http://localhost:3001/api/getAllTickets
+GET http://localhost:3001/api/getAllTickets HTTP/1.1
+
+###
+GET http://localhost:3001/api/tickets/20  HTTP/1.1

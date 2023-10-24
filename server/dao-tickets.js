@@ -122,12 +122,7 @@ exports.getAllTickets = () => {
         reject(err);
       } else {
         const tickets = rows.map((e) => {
-          const ticket = Object.assign({}, e, {
-            id: e.id,
-            creationDate: e.creationdate,
-            closedDate: e.closeddate,
-            serviceId: e.serviceid
-          });
+          const ticket = Object.assign({}, e, {});
           return ticket;
         });
         resolve(tickets)
