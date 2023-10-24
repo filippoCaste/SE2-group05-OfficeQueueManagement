@@ -22,6 +22,7 @@ function GetTicketComponent(props)
 
     const [selectedTicket, setSelectedTicket] = useState(false);
     const [numberTicket, setNumberTicket] = useState('');  
+    const [noPeopleBefore, setNoPeopleBefore] = useState(0);
 
          
     const handleItemClick = async(service) => 
@@ -37,8 +38,9 @@ function GetTicketComponent(props)
       .then( () => {
           API.getAllTickets()
             .then((tks) => {
-              console.log(tks);
               setNumberTicket(tks.length);
+              const ts = tks.filter((t) => t.workerid==0 && t.serviceid===service.id)
+              setNoPeopleBefore(ts.length-1)
               setSelectedTicket(true);
             })
           });
@@ -62,7 +64,7 @@ function GetTicketComponent(props)
         ))}
       </List>
 
-      {selectedTicket?  <h2> Your ticket is: {numberTicket}  </h2>  :  <></>  }
+        {selectedTicket ? <><h2> You ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before you turn.</p></> :  <></>  }
 
     </> 
     );
