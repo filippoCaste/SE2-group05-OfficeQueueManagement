@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from 'react';
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 
 const AppNavBar = (props) => {
+  const { loggedin, handleLogout} = props;
   const navigate = useNavigate();
 
   return (
@@ -32,9 +33,19 @@ const AppNavBar = (props) => {
 
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
-            <Button sx={{ color: "#fff" }}>
-              Login
-            </Button>
+            {loggedin ? (
+              <Button onClick={(() => {handleLogout().then(() =>navigate("/"))})}  
+               sx={{ color: "#fff" }}
+               >
+                Logout
+              </Button>
+            ) : (
+               <Button onClick={() =>navigate("/login")} 
+               sx={{ color: "#fff" }}
+               >
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
