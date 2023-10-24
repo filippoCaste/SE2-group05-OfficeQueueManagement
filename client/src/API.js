@@ -195,6 +195,36 @@ const getTicketByServiceId = async (serviceId) => {
   }
 };
 
+/**
+ * Prints the new ticket generated according to the requested service in the database (no return)
+ */
+const printTicketByServiceId = async (serviceId) => {
+  try {
+    if (serviceId === null) {
+      throw { error: "service id is not a number" };
+    }
+    if (!Number.isInteger(Number(serviceId)) || Number(serviceId) < 1) {
+      throw { error: "service id must be well formatted" };
+    }
+    const response = await fetch(SERVER_URL + `/printTicket/${serviceId}`, {
+      method: "POST",
+      credentials: "include",
+    });
+    if (response.ok) {
+      return true;
+    } else {
+      const errMessage = await response.json();
+      throw errMessage;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      throw { error: "Cannot parse server response" };
+    }
+  }
+}
+
 /*
 const getPublicatedtickets = async () => {
   try {
@@ -504,7 +534,8 @@ const API = {
   getAllServices,
   getAllCounters,
   getTicketByServiceId,
-  getCounterById
+  getCounterById,
+  printTicketByServiceId,
 };
 
 export default API;

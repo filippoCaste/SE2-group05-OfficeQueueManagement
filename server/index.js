@@ -175,7 +175,6 @@ app.get("/api/counters", async (req, res) => {
 
 //Give Counter By Id
 app.get("/api/counters/:id", async (req, res) => {
-  
   try {
     const counter = await serviceDao.getCounterById(req.params.id);
     res.json(counter);
@@ -184,8 +183,28 @@ app.get("/api/counters/:id", async (req, res) => {
   }
 });
 
+/**
+ * Insert into the database a new ticket
+ */
+app.post("/api/printTicket/:serviceId", async (req,res) => {
+  try {
+    await ticketDao.printTicketByService(req.params.serviceId);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-
+/**
+ * @returns the last added ticket (to be called immediately after printTicket/:serviceId)
+ */
+app.get("/api/getAllTickets", async(req,res) => {
+  try {
+    const ticket = await ticketDao.getAllTickets();
+    res.json(ticket);
+  } catch(err) {
+    res.status(500).json(err);
+  }
+})
 
 // 3. Retrieve an open ticket, given its serviceId
 // GET /api/tickets/<serviceId>

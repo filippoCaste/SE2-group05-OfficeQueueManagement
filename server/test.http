@@ -12,3 +12,9 @@ Get http://localhost:3001/api/counters
 
 ###
 Get http://localhost:3001/api/counters/2
+
+###
+POST http://localhost:3001/api/printTicket/1
+
+###
+GET http://localhost:3001/api/getAllTickets

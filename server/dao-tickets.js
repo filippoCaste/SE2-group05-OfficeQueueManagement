@@ -65,7 +65,6 @@ exports.getNumberOfServedTicketsPerService = (serviceId) => {
 /**
  * @returns the ticket belonging to specified service
  */
-
 exports.getticketByService = (serviceId) => {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -92,6 +91,50 @@ exports.getticketByService = (serviceId) => {
     });
   });
 };
+
+/**
+ * Print the ticket and enqueue it according to the service.
+ */
+exports.printTicketByService = (serviceId) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "INSERT INTO tickets (creationdate, closeddate, workerid, serviceid) VALUES (?,NULL,0,?) ; ";
+    const today = dayjs().format();
+    db.run(sql, [today, serviceId], (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
+
+/**
+ * @returns all tickets
+ */
+exports.getAllTickets = () => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "SELECT * FROM tickets ORDER BY id ; ";
+    db.all(sql, (err,rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        const tickets = rows.map((e) => {
+          const ticket = Object.assign({}, e, {
+            id: e.id,
+            creationDate: e.creationdate,
+            closedDate: e.closeddate,
+            serviceId: e.serviceid
+          });
+          return ticket;
+        });
+        resolve(tickets)
+      }
+    });
+  });
+}
 
 /*
 // This function retrieves the whole list of tickets from the database.

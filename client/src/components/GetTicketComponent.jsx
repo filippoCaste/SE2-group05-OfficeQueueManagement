@@ -30,9 +30,14 @@ function GetTicketComponent(props)
        setSelectedTicket(()=>true)
 
        //service.id_counter
-       await API.getCounterById(service.id_counter)
-       .then((q)=>setNumberTicket(q.value_number+" is your number ticket at the counter "+q.id_counter+" for the service "+service.serviceName))
-    
+      //  await API.getCounterById(service.id_counter)
+      //  .then((q)=>setNumberTicket(q.value_number+" is your number ticket at the counter "+q.id_counter+" for the service "+service.serviceName))
+      
+      // Add the ticket to the DB
+      await API.printTicketByServiceId(service.id);
+
+      setNumberTicket("You are in the queue now. Your ticket is number xx");
+        
     };
   
     return (
