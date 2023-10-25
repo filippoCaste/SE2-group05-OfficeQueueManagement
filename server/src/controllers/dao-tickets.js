@@ -6,29 +6,29 @@ const dayjs = require("dayjs");
  * API: tickets
  */
 // This function retrieves the whole list of tickets from the database.
-exports.getTickets = () => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
-    db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      const tickets = rows.map((e) => {
-        const ticket = Object.assign({}, e, {
-          creationDate: e.creationdate,
-          closedDate: e.closeddate,
-        });
-        delete ticket.creationdate; // removing lowercase
-        delete ticket.closeddate; // removing lowercase
-        return ticket;
-      });
-      const sortedtickets = [...tickets].sort(sortByCreationDate);
-      // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
-      resolve(sortedtickets);
-    });
-  });
-};
+// exports.getTickets = () => {
+//   return new Promise((resolve, reject) => {
+//     const sql =
+//       "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
+//     db.all(sql, (err, rows) => {
+//       if (err) {
+//         reject(err);
+//       }
+//       const tickets = rows.map((e) => {
+//         const ticket = Object.assign({}, e, {
+//           creationDate: e.creationdate,
+//           closedDate: e.closeddate,
+//         });
+//         delete ticket.creationdate; // removing lowercase
+//         delete ticket.closeddate; // removing lowercase
+//         return ticket;
+//       });
+//       const sortedtickets = [...tickets].sort(sortByCreationDate);
+//       // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
+//       resolve(sortedtickets);
+//     });
+//   });
+// };
 
 /**
  * @returns the number of tickets that *are in the queue*, according to the serviceId
@@ -71,7 +71,7 @@ exports.getticketByService = (serviceId) => {
     SELECT id, creationdate
     FROM tickets
     WHERE closeddate IS NULL
-      AND workerid= 0
+      AND counterid = 0
       AND serviceid = ?
     ORDER BY creationdate
     LIMIT 1;
@@ -91,6 +91,41 @@ exports.getticketByService = (serviceId) => {
     });
   });
 };
+exports.getTicketByCounterId = (counterid) => {
+  console.log("here")
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT t.id, t.creationdate
+    FROM tickets AS t, (
+			SELECT t1.serviceid, COUNT(*) AS queue_length
+            FROM tickets AS t1, configurationService AS cs
+            WHERE t1.counterid=0
+			AND cs.serviceid=t1.serviceid
+			AND cs.counterid=?
+            GROUP BY t1.serviceid
+            ORDER BY queue_length DESC
+			LIMIT 1)
+    WHERE t.closeddate IS NULL
+    AND t.counterid = 0
+    ORDER BY t.creationdate
+    LIMIT 1;
+    `;
+    db.get(sql, [counterid], (err, ticket) => {
+      if (err) {
+        reject(err);
+      } else if (ticket === undefined) {
+        resolve({ error: "ticket not available" });
+      } else {
+        const ticketObject = {
+          id: ticket.id,
+          creationDate: ticket.creationdate,
+        };
+        resolve(ticketObject); // Resolve the Promise with the ticketObject
+      }
+    });
+  });
+};
+
 
 /**
  * Print the ticket and enqueue it according to the service.

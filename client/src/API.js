@@ -239,12 +239,12 @@ const getTicketByCounterId = async (counterid) => {
     if (!Number.isInteger(Number(counterid)) || Number(counterid) < 1) {
       throw { error: "id must be well formatted" };
     }
-    const response = await fetch(SERVER_URL + `/tickets/${counterid}`, {
+    const response = await fetch(SERVER_URL + `/counters/${counterid}/tickets`, {
       credentials: "include",
     });
     if (response.ok) {
-      const page = await response.json();
-      return page;
+      const ticket = await response.json();
+      return ticket;
     } else {
       const errMessage = await response.json();
       throw errMessage;
@@ -271,7 +271,7 @@ const printTicketByServiceId = async (serviceId) => {
     if (!Number.isInteger(Number(serviceId)) || Number(serviceId) < 1) {
       throw { error: "service id must be well formatted" };
     }
-    const response = await fetch(SERVER_URL + `/printTicket/${serviceId}`, {
+    const response = await fetch(SERVER_URL + `/tickets/print/${serviceId}`, {
       method: "POST",
       credentials: "include",
     });
@@ -292,7 +292,7 @@ const printTicketByServiceId = async (serviceId) => {
 
 const getAllTickets = async () => {
   try {
-    const response = await fetch(SERVER_URL + `/getAllTickets`, {
+    const response = await fetch(SERVER_URL + `/tickets/getAllTickets`, {
       method: "GET",
     });
     if (response.ok) {
@@ -324,6 +324,7 @@ const API = {
   printTicketByServiceId,
   getAllTickets,
   getAvailableCounters,
+  getTicketByCounterId,
   getServicesByCounterId
 };
 
