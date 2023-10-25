@@ -31,7 +31,7 @@ export default function CounterMenu(props)
           aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         >
-        CounterID
+        {counter ? counter?.id : "CounterID"}
       </Button>
       <Menu
         id="basic-menu"

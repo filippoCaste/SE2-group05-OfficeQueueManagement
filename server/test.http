@@ -16,13 +16,15 @@ GET http://localhost:3001/api/counters HTTP/1.1
 GET http://localhost:3001/api/counters/2 HTTP/1.1
 
 ###
+GET http://localhost:3001/api/counters/1/tickets HTTP/1.1
+###
 GET http://localhost:3001/api/counters/available HTTP/1.1
 
 ###
-POST http://localhost:3001/api/printTicket/1 HTTP/1.1
+POST http://localhost:3001/api/tickets/print/1 HTTP/1.1
 
 ###
-GET http://localhost:3001/api/getAllTickets HTTP/1.1
+GET http://localhost:3001/api/tickets/getAllTickets HTTP/1.1
 
 ###
 GET http://localhost:3001/api/tickets/20  HTTP/1.1

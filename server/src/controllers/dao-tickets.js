@@ -91,6 +91,41 @@ exports.getticketByService = (serviceId) => {
     });
   });
 };
+exports.getTicketByCounterId = (counterid) => {
+  console.log("here")
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT t.id, t.creationdate
+    FROM tickets AS t, (
+			SELECT t1.serviceid, COUNT(*) AS queue_length
+            FROM tickets AS t1, configurationService AS cs
+            WHERE t1.counterid=0
+			AND cs.serviceid=t1.serviceid
+			AND cs.counterid=?
+            GROUP BY t1.serviceid
+            ORDER BY queue_length DESC
+			LIMIT 1)
+    WHERE t.closeddate IS NULL
+    AND t.counterid = 0
+    ORDER BY t.creationdate
+    LIMIT 1;
+    `;
+    db.get(sql, [counterid], (err, ticket) => {
+      if (err) {
+        reject(err);
+      } else if (ticket === undefined) {
+        resolve({ error: "ticket not available" });
+      } else {
+        const ticketObject = {
+          id: ticket.id,
+          creationDate: ticket.creationdate,
+        };
+        resolve(ticketObject); // Resolve the Promise with the ticketObject
+      }
+    });
+  });
+};
+
 
 /**
  * Print the ticket and enqueue it according to the service.

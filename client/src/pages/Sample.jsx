@@ -55,14 +55,14 @@ function Sample(props) {
     setStartButtonDisabled(false);
   };
 
-  const getTicketByCounter = async (coounterid) => {
+  const getTicketByCounter = async (counterid) => {
     try {
-      const fetchedTicket = await API.getTicketByCounter(coounterid);
-      setCounters(fetchedTicket);
+
+      const fetchedTicket = await API.getTicketByCounterId(counterid);
+      setTicket(fetchedTicket);
     } catch (error) {
       setTicket();
       handleErrors(error);
-    } finally {
     }
   };
     useEffect(() => {
@@ -71,7 +71,8 @@ function Sample(props) {
 
     useEffect(() => {
       getTicketByCounter(counter?.id);
-    },[])
+      
+    },[counter])
 
   return (
     <Container>

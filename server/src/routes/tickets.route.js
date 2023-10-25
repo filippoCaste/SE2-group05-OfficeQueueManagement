@@ -69,6 +69,16 @@ router.get("/getAllTickets", async (req, res) => {
   }
 });
 
+router.get("/counters/:counterid/tickets", async (req, res) => {
+  try {
+    console.log("here")
+    const ticket = await ticketDao.getTicketByCounterId(req.params.counterid);
+    res.status(200).json(ticket);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // 3. Retrieve an open ticket, given its serviceId
 // GET /api/tickets/<serviceId>
 // Given a service id, this route returns the oldest associated open ticket
