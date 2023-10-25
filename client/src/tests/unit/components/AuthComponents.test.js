@@ -6,7 +6,7 @@ import ErrorContext from '../../../errorContext';
 import LoginForm from '../../../components/AuthComponents';
 
 describe('LoginForm', () => {
-  it('renders the component correctly', () => {
+  test('renders the component correctly', () => {
     render(
           <MemoryRouter>
             <ErrorContext.Provider value={{ handleErrors: jest.fn() }}>
@@ -19,7 +19,7 @@ describe('LoginForm', () => {
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
 
-  it('submits the form with valid data', async () => {
+  test('submits the form with valid data', async () => {
     const mockLogin = jest.fn();
     render(<LoginForm login={mockLogin} />);
     
@@ -37,7 +37,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('displays an error message when form submission fails', async () => {
+  test('displays an error message when form submission fails', async () => {
     const mockLogin = jest.fn().mockRejectedValue(new Error('Login failed'));
     const mockHandleErrors = jest.fn();
     
