@@ -231,6 +231,35 @@ const getTicketByServiceId = async (serviceId) => {
   }
 };
 
+const getTicketByCounterId = async (counterid) => {
+  try {
+    if (counterid === null) {
+      throw { error: "id is not a number" };
+    }
+    if (!Number.isInteger(Number(counterid)) || Number(counterid) < 1) {
+      throw { error: "id must be well formatted" };
+    }
+    const response = await fetch(SERVER_URL + `/tickets/${counterid}`, {
+      credentials: "include",
+    });
+    if (response.ok) {
+      const page = await response.json();
+      return page;
+    } else {
+      const errMessage = await response.json();
+      throw errMessage;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      throw { error: "Cannot parse server response" };
+    }
+  }
+};
+
+
+
 /**
  * Prints the new ticket generated according to the requested service in the database (no return)
  */

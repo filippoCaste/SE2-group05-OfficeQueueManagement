@@ -55,12 +55,12 @@ function Sample(props) {
     setStartButtonDisabled(false);
   };
 
-  const getTicketByCounter = async () => {
+  const getTicketByCounter = async (coounterid) => {
     try {
-      const fetchedCounters = await API.getAvailableCounters();
-      setCounters(fetchedCounters);
+      const fetchedTicket = await API.getTicketByCounter(coounterid);
+      setCounters(fetchedTicket);
     } catch (error) {
-      setCounters([]);
+      setTicket();
       handleErrors(error);
     } finally {
     }
