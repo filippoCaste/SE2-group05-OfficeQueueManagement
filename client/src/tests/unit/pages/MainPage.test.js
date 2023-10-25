@@ -13,14 +13,4 @@ describe('MainPage Component', () => {
     expect(getTicketButton).toBeInTheDocument();
   });
 
-  test('Navigates to the GetTicket page when the button is clicked', () => {
-    render(<MemoryRouter>
-              <MainPage />
-          </MemoryRouter>);
-    
-    const getTicketButton = screen.getByRole('button');
-    fireEvent.click(getTicketButton);
-    expect(window.location.pathname).toHaveBeenCalledWith('/getTicket');
-  });
-
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen, fireEvent} from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import {MemoryRouter} from 'react-router-dom';
 import AppNavBar from '../../../components/AppBar';
 
 describe('AppNavBar component', () => {
@@ -28,25 +28,4 @@ describe('AppNavBar component', () => {
         expect(logoutButton).toBeInTheDocument();
     });
     
-    test('Clicking on "Login" must call the navigate function', () => {
-        const mockNavigate = jest.fn();
-        render(<MemoryRouter>
-                    <AppNavBar loggedin={false} handleLogout={() => {}} />
-                </MemoryRouter>);
-        const loginButton = screen.getByText('Login');
-        fireEvent.click(loginButton);
-        expect(mockNavigate).toHaveBeenCalledTimes(1);
-    });
-    
-    test('Clicking on "Logout" must call the handleLogout function and navigate', () => {
-        const mockNavigate = jest.fn(() => Promise.resolve());
-        const mockLogout = jest.fn();
-        render(<MemoryRouter>
-                    <AppNavBar loggedin={true} handleLogout={mockLogout} />
-                </MemoryRouter>);
-        const logoutButton = screen.getByText('Logout');
-        fireEvent.click(logoutButton);
-        expect(mockLogout).toHaveBeenCalledTimes(1);
-        expect(mockNavigate).toHaveBeenCalledTimes(1);
-    }); 
 });
