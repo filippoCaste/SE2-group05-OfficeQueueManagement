@@ -2,7 +2,7 @@
 
 /* Data Access Object (DAO) module for accessing users data */
 
-const db = require('./db');
+const db = require('../../db');
 const crypto = require('crypto');
 
 
