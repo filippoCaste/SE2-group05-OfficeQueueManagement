@@ -1,6 +1,6 @@
 "use strict";
 /* Data Access Object (DAO) module for accessing tickets data */
-const db = require("./db");
+const db = require("../../db");
 const dayjs = require("dayjs");
 /*
  * API: tickets
