@@ -2,8 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Sample from '../../../pages/Sample';
 import { MemoryRouter } from 'react-router-dom';
+import API from '../../../API';
 
-jest.mock('../API', () => ({
+jest.mock('../../../API', () => ({
   getTicketbyService: jest.fn(),
   getAllServices: jest.fn(),
   getAllCounters: jest.fn(),
