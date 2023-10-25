@@ -27,4 +27,8 @@ POST http://localhost:3001/api/tickets/print/1 HTTP/1.1
 GET http://localhost:3001/api/tickets/getAllTickets HTTP/1.1
 
 ###
-GET http://localhost:3001/api/tickets/20  HTTP/1.1
+GET http://localhost:3001/api/tickets/1  HTTP/1.1
+
+###
+GET http://localhost:3001/api/services/1/services  HTTP/1.1
+

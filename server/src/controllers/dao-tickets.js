@@ -6,29 +6,29 @@ const dayjs = require("dayjs");
  * API: tickets
  */
 // This function retrieves the whole list of tickets from the database.
-exports.getTickets = () => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
-    db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      const tickets = rows.map((e) => {
-        const ticket = Object.assign({}, e, {
-          creationDate: e.creationdate,
-          closedDate: e.closeddate,
-        });
-        delete ticket.creationdate; // removing lowercase
-        delete ticket.closeddate; // removing lowercase
-        return ticket;
-      });
-      const sortedtickets = [...tickets].sort(sortByCreationDate);
-      // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
-      resolve(sortedtickets);
-    });
-  });
-};
+// exports.getTickets = () => {
+//   return new Promise((resolve, reject) => {
+//     const sql =
+//       "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
+//     db.all(sql, (err, rows) => {
+//       if (err) {
+//         reject(err);
+//       }
+//       const tickets = rows.map((e) => {
+//         const ticket = Object.assign({}, e, {
+//           creationDate: e.creationdate,
+//           closedDate: e.closeddate,
+//         });
+//         delete ticket.creationdate; // removing lowercase
+//         delete ticket.closeddate; // removing lowercase
+//         return ticket;
+//       });
+//       const sortedtickets = [...tickets].sort(sortByCreationDate);
+//       // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
+//       resolve(sortedtickets);
+//     });
+//   });
+// };
 
 /**
  * @returns the number of tickets that *are in the queue*, according to the serviceId
@@ -71,7 +71,7 @@ exports.getticketByService = (serviceId) => {
     SELECT id, creationdate
     FROM tickets
     WHERE closeddate IS NULL
-      AND workerid= 0
+      AND counterid = 0
       AND serviceid = ?
     ORDER BY creationdate
     LIMIT 1;
