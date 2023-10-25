@@ -10,7 +10,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useNavigate } from "react-router-dom";
 import { useState , useEffect,useContext} from "react";
-import ServiceMenu from '../components/ServiceMenuComponents';
 import CurrentTimeDisplay from '../components/CurrentTimeDisplay';
 import CounterMenu from '../components/CounterMenuComponents';
 import dayjs from 'dayjs'; // Import dayjs
@@ -25,15 +24,13 @@ function Sample(props) {
   const [startButtonDisabled, setStartButtonDisabled] = useState(false);
   const [startDate, setStartDate] = useState(null); // State to store the start date
   const [closedDate, setClosedDate] = useState(null);     // State to store the closed date
-  const [service,setService] = useState('');
   const [counter,setCounter] = useState(null);
   const [ticket,setTicket] = useState(null);
   const [counters,setCounters] = useState([]);
-  const [services,setServices] = useState([]);
 
   const getAvailableCounters = async () => {
     try {
-      const fetchedCounters = await API.getAllAvailableCounters();
+      const fetchedCounters = await API.getAvailableCounters();
       setCounters(fetchedCounters);
     } catch (error) {
       setCounters([]);
@@ -41,6 +38,7 @@ function Sample(props) {
     } finally {
     }
   };
+
 
   const handleStartClick = () => {
     setStartButtonDisabled(true);
@@ -56,28 +54,24 @@ function Sample(props) {
     setClosedDate();
     setStartButtonDisabled(false);
   };
+
+  const getTicketByCounter = async () => {
+    try {
+      const fetchedCounters = await API.getAvailableCounters();
+      setCounters(fetchedCounters);
+    } catch (error) {
+      setCounters([]);
+      handleErrors(error);
+    } finally {
+    }
+  };
     useEffect(() => {
       getAvailableCounters();
     },[user])
 
-    const getServicesById = async () => {
-      try {
-        if(counter){
-          const servicesSelected = await API.getServicesByCounterId(counter?.id);
-          setServices(servicesSelected);
-        }
-      } catch (error) {
-        setServices([]);
-        handleErrors(error);
-      } finally {
-      }
-    };
-
-    useEffect(() =>{
-      //api services
-      getServicesById();
-    }
-    ,[counter])
+    useEffect(() => {
+      getTicketByCounter(counter?.id);
+    },[])
 
   return (
     <Container>
@@ -92,9 +86,6 @@ function Sample(props) {
           <Grid item>
             <CounterMenu disable={startButtonDisabled} counters={counters} counter={counter} setCounter={setCounter}/>
           </Grid>
-            <Grid item>
-                <ServiceMenu disable={startButtonDisabled} services={services} service={service} setService={setService} />
-            </Grid>
         </Grid>
 
         <Grid item>

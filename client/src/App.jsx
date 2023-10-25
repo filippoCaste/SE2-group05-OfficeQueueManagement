@@ -113,7 +113,7 @@ function App() {
           <Route
             element={
               <>
-               <Container fluid maxWidth="xl" >
+               <Container fluid="true" maxWidth="xl" >
                 <AppNavBar handleLogout={handleLogout} loggedin={loggedin} />
                   {message && (
                     <Box>

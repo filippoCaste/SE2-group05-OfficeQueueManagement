@@ -28,10 +28,10 @@ function LoginForm(props) {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: "center",
         minHeight: '50vh',
+        maxWidth:"xl"
       }}
-      maxWidth="xl"
     >
       <Box
         component="form"

@@ -15,7 +15,7 @@ exports.getCounters = () => {
                 reject(err);
             } else {
                 const counters = rows.map((e) => {
-                    const c = Object.create(counter);
+                    const c = Object.create(null);
                     c.id_counter = e.id_counter;
                     c.userid = e.userid;
                     return c;
@@ -27,36 +27,41 @@ exports.getCounters = () => {
 }
 
 
-/**
- * @returns all the counters offered by the OfficeQueueManagement
- */
-exports.getAvailableCounters = () => {
-    return new Promise((resolve, reject) => {
-      const sql = "SELECT * FROM counters WHERE userid=0;";
-      console.log("avail")
-      db.all(sql, (err, rows) => {
-        if (err) {
-          console.log(err)
-          reject(err);
-        } else {
-          const counters = rows.map((e) => {
-            const c = Object.create(null); // Corrected object creation
-            c.id_counter = e.id_counter;
-            return c;
-          });
 
-          resolve(counters);
-        }
+/**
+ * @returns all the counters offered available by the OfficeQueueManagement
+ */
+
+exports.getAvailableCounters = () => {
+  console.log("her")
+  return new Promise((resolve, reject) => {
+      const sql = `SELECT * 
+      FROM counters WHERE userid=0 ; `;
+      db.all(sql, (err, rows) => {
+          if (err) {
+              reject(err);
+          } else {
+            console.log("her1")
+              const counters = rows.map((e) => {
+                  const c = Object.create(null);
+                  c.id_counter = e.id_counter;
+                  c.userid = e.userid;
+                  return c;
+              });
+              console.log("here")
+              resolve(counters);
+          }
       });
-    });
-  }
-  
+  });
+}
+
 
 
 
 /**
  * @returns a counter by the id
  */
+
 exports.getCounterById = (id) => {
     return new Promise((resolve, reject) => {
       const sql = 'SELECT * FROM counters WHERE id_counter=?';
@@ -81,3 +86,4 @@ exports.getCounterById = (id) => {
       });
     });
   };
+

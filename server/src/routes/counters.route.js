@@ -13,9 +13,21 @@ router.get("/", async (req, res) => {
     }
   });
   
+  router.get("/available", async (req, res) => {
+    try {
+      console.log("here")
+      const counters = await counterDao.getAvailableCounters();
+      console.log(counters)
+      res.json(counters);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  })
+  
   //Give Counter By Id
   router.get("/:id", async (req, res) => {
     try {
+      console.log("here")
       const counter = await counterDao.getCounterById(req.params.id);
       res.json(counter);
     } catch (err) {
@@ -23,15 +35,7 @@ router.get("/", async (req, res) => {
     }
   });
 
-  router.get("/available", async (req, res) => {
-    try {
-      console.log("here")
-      const counters = await counterDao.getAvailableCounters();
-      res.json(counters);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  })
-  
+
+
 
   exports.countersRouter = router;
