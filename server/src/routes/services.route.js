@@ -11,4 +11,14 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id/services", async (req, res) => {
+  try {
+    const services = await serviceDao.getServicesByCounterId(req.params.id);
+    res.json(services);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 exports.servicesRouter = router;

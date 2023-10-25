@@ -4,7 +4,7 @@ const router = require("express").Router();
 const counterDao = require("../controllers/dao-counters");
 
 
-router.get("/counters", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
       const counters = await counterDao.getCounters();
       res.json(counters);
@@ -14,7 +14,7 @@ router.get("/counters", async (req, res) => {
   });
   
   //Give Counter By Id
-  router.get("/counters/:id", async (req, res) => {
+  router.get("/:id", async (req, res) => {
     try {
       const counter = await counterDao.getCounterById(req.params.id);
       res.json(counter);
@@ -22,6 +22,16 @@ router.get("/counters", async (req, res) => {
       res.status(500).json(err);
     }
   });
+
+  router.get("/available", async (req, res) => {
+    try {
+      console.log("here")
+      const counters = await counterDao.getAvailableCounters();
+      res.json(counters);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  })
   
 
-  exports.counterRouter = router;
+  exports.countersRouter = router;

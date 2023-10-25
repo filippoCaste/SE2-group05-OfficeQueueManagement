@@ -14,7 +14,6 @@ export default function ServiceMenu(props) {
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  console.log(services);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

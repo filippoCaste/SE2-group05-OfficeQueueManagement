@@ -3,7 +3,6 @@
 /* Data Access Object (DAO) module for accessing tickets data */
 
 const db = require('../../db');
-const serviceDao = require("./dao-services"); // module for accessing the user table in the DB
 
 /**
  * @returns all the counters offered by the OfficeQueueManagement
@@ -34,8 +33,10 @@ exports.getCounters = () => {
 exports.getAvailableCounters = () => {
     return new Promise((resolve, reject) => {
       const sql = "SELECT * FROM counters WHERE userid=0;";
+      console.log("avail")
       db.all(sql, (err, rows) => {
         if (err) {
+          console.log(err)
           reject(err);
         } else {
           const counters = rows.map((e) => {
@@ -43,6 +44,7 @@ exports.getAvailableCounters = () => {
             c.id_counter = e.id_counter;
             return c;
           });
+
           resolve(counters);
         }
       });

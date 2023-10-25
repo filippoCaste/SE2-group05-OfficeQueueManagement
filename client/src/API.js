@@ -121,8 +121,9 @@ async function getAllCounters() {
 
 
 async function getAllAvailableCounters() {
-  // call  /api/counters
-  const response = await fetch(SERVER_URL + "/counters/available");
+
+  console.log("here")
+  const response = await fetch(SERVER_URL + `/counters/available`);
   const counters = await response.json();
 
   if (response.ok) {
