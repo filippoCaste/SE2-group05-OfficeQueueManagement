@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import GetTicketComponent from '../../../components/GetTicketComponent';
-import API from '../API';
+import API from '../../../API';
 
-jest.mock('../API');
+jest.mock('../../../API');
 
 describe('GetTicketComponent', () => {
   afterEach(() => {
