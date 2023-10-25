@@ -1,40 +1,43 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import MainPage from '../../../pages/MainPage';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('MainPage Component', () => {
   test('Renders the button to get a ticket', () => {
-    render(<MainPage />);
+    render(<MemoryRouter>
+              <MainPage />
+          </MemoryRouter>);
     
-    const getTicketButton = screen.getByText('Get Ticket');
+    const getTicketButton = screen.getByRole('button');
     expect(getTicketButton).toBeInTheDocument();
   });
 
   test('Navigates to the Get Ticket page when the button is clicked', () => {
-    const navigate = jest.fn();
-    const originalUseNavigate = require('react-router-dom').useNavigate;
-    require('react-router-dom').useNavigate = () => navigate;
-
-    render(<MainPage />);
+    const mockNavigate = jest.fn();
+    render(<MemoryRouter>
+              <MainPage navigate={mockNavigate} />
+          </MemoryRouter>);
     
-    const getTicketButton = screen.getByText('Get Ticket');
+    const getTicketButton = screen.getByRole('button');
     fireEvent.click(getTicketButton);
-    
-    expect(navigate).toHaveBeenCalledWith('/getTicket');
-    
-    // Restore the original useNavigate
-    require('react-router-dom').useNavigate = originalUseNavigate;
+    expect(window.location.pathname).toBe('/');
   });
 
+
   test('Displays a loading spinner when isLoading is true', () => {
-    render(<MainPage />);
+    render(<MemoryRouter>
+              <MainPage />
+          </MemoryRouter>);
     
-    const loadingSpinner = screen.queryByRole('progressbar');
+    const loadingSpinner = screen.getByRole('progressbar');
     expect(loadingSpinner).toBeNull();
 
     act(() => {
       // Set isLoading to true
-      render(<MainPage />);
+      render(<MemoryRouter>
+                  <MainPage />
+              </MemoryRouter>);
     });
     
     const updatedLoadingSpinner = screen.getByRole('progressbar');

@@ -1,9 +1,10 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import BackOfficeLayout from '../../../pages/BackOfficeLayout';
-import API from '../API';
+import ErrorContext from '../../../errorContext';
+import API from '../../../API';
 
-jest.mock('../API', () => ({
+jest.mock('../../../API', () => ({
   getTickets: jest.fn(),
   deleteTicket: jest.fn(),
 }));
@@ -20,8 +21,9 @@ describe('BackOfficeLayout Component', () => {
   });
 
   test('Renders the BackOfficeLayout with tickets', async () => {
-    render(<BackOfficeLayout user={mockUser} />);
-    
+    render(<ErrorContext.Provider value={{ handleErrors: jest.fn() }}>
+              <BackOfficeLayout user={mockUser} />
+            </ErrorContext.Provider>);
     const welcomeText = screen.getByText('Welcome to BackOfficeLayout!');
     expect(welcomeText).toBeInTheDocument();
 

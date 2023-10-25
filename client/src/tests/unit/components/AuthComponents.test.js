@@ -1,30 +1,35 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import ErrorContext from '../../../errorContext';
-import LoginForm from '../../../components/AuthComponents';
+import {LoginForm} from '../../../components/AuthComponents';
+import userEvent from '@testing-library/user-event';
 
 describe('LoginForm', () => {
   test('renders the component correctly', () => {
     render(
           <MemoryRouter>
             <ErrorContext.Provider value={{ handleErrors: jest.fn() }}>
-              <LoginForm login={() => {}} />);
+              <LoginForm login={() => {}} />
             </ErrorContext.Provider>
           </MemoryRouter>);
     
     expect(screen.getByText('Login')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByText('Email')).toBeInTheDocument();
+    expect(screen.getByText('Password')).toBeInTheDocument();
   });
 
   test('submits the form with valid data', async () => {
     const mockLogin = jest.fn();
-    render(<LoginForm login={mockLogin} />);
+    render(
+      <MemoryRouter>
+        <ErrorContext.Provider value={{ handleErrors: jest.fn() }}>
+          <LoginForm login={mockLogin} />
+        </ErrorContext.Provider>
+      </MemoryRouter>);
     
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
+    const emailInput = screen.getByText('Email');
+    const passwordInput = screen.getByText('Password');
     const loginButton = screen.getByText('Login');
 
     userEvent.type(emailInput, 'testuser@example.com');
@@ -41,7 +46,12 @@ describe('LoginForm', () => {
     const mockLogin = jest.fn().mockRejectedValue(new Error('Login failed'));
     const mockHandleErrors = jest.fn();
     
-    render(<LoginForm login={mockLogin} />);
+    render(
+      <MemoryRouter>
+        <ErrorContext.Provider value={{ handleErrors: jest.fn() }}>
+          <LoginForm login={mockLogin} />
+        </ErrorContext.Provider>
+      </MemoryRouter>);
     
     const loginButton = screen.getByText('Login');
     
@@ -49,7 +59,7 @@ describe('LoginForm', () => {
 
     await act(async () => {
       expect(mockLogin).toHaveBeenCalled();
-      expect(mockHandleErrors).not.toHaveBeenCalled();
+      sexpect(mockHandleErrors).not.toHaveBeenCalled();
     });
   });
 });
