@@ -106,35 +106,69 @@ async function getAllServices() {
 
 async function getAllCounters() {
   // call  /api/counters
-  const response = await fetch(SERVER_URL + "/services/counters");
+  const response = await fetch(SERVER_URL + "/counters");
   const counters = await response.json();
 
   if (response.ok) {
     return counters.map((e) => ({
       id: e.id_counter,
-      value_number: e.value_number,
+      userid: e.userid
     }));
   } else {
     throw counters;
   }
 }
 
+
+async function getAllAvailableCounters() {
+  // call  /api/counters
+  const response = await fetch(SERVER_URL + "/counters/available");
+  const counters = await response.json();
+
+  if (response.ok) {
+    return counters.map((e) => ({
+      id: e.id_counter
+    }));
+  } else {
+    throw counters;
+  }
+}
+
+
 async function getCounterById(id) {
   
   // call  /api/counters/<id>
-  const response = await fetch(SERVER_URL+`/services/counters/${id}`);
+  const response = await fetch(SERVER_URL+`/counters/${id}`);
   const question = await response.json();
 
   if (response.ok) 
   {
     const e = question;
-    return {  id_counter: e.id_counter,  value_number: e.value_number};
+    return {  id_counter: e.id_counter};
   } 
   else 
   {
     throw question; 
   }
 }
+async function getServicesByCounterId(counterid) {
+
+  const response = await fetch(SERVER_URL+`/counters/${counterid}/services`);
+  const services = await response.json();
+  console.log(services);
+  if (response.ok) 
+  {
+    return services.map((e) => ({
+      serviceid: e.serviceid,
+      servicename: e.servicename
+    }));
+  } 
+  else 
+  {
+    throw services; 
+  }
+}
+
 
 const getTickets = async () => {
   try {
@@ -206,7 +240,7 @@ const printTicketByServiceId = async (serviceId) => {
     if (!Number.isInteger(Number(serviceId)) || Number(serviceId) < 1) {
       throw { error: "service id must be well formatted" };
     }
-    const response = await fetch(SERVER_URL + `/tickets/print/${serviceId}`, {
+    const response = await fetch(SERVER_URL + `/printTicket/${serviceId}`, {
       method: "POST",
       credentials: "include",
     });
@@ -227,7 +261,7 @@ const printTicketByServiceId = async (serviceId) => {
 
 const getAllTickets = async () => {
   try {
-    const response = await fetch(SERVER_URL + `/tickets/getAll`, {
+    const response = await fetch(SERVER_URL + `/getAllTickets`, {
       method: "GET",
     });
     if (response.ok) {
@@ -558,6 +592,8 @@ const API = {
   getCounterById,
   printTicketByServiceId,
   getAllTickets,
+  getAllAvailableCounters,
+  getServicesByCounterId
 };
 
 export default API;

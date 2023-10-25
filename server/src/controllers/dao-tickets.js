@@ -1,6 +1,6 @@
 "use strict";
 /* Data Access Object (DAO) module for accessing tickets data */
-const db = require("../../db");
+const db = require('../../db');
 const dayjs = require("dayjs");
 /*
  * API: tickets
@@ -98,7 +98,7 @@ exports.getticketByService = (serviceId) => {
 exports.printTicketByService = (serviceId) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "INSERT INTO tickets (creationdate, closeddate, workerid, serviceid) VALUES (?,NULL,0,?) ; ";
+      "INSERT INTO tickets (creationdate, closeddate, counterid, serviceid) VALUES (?,NULL,0,?) ; ";
     const today = dayjs().format();
     db.run(sql, [today, serviceId], (err) => {
       if (err) {

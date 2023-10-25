@@ -4,66 +4,51 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
 
 
 export default function ServiceMenu(props) {
-  const {disable, services} = props;
+  const {disable, services, setService, service} = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
   const open = Boolean(anchorEl);
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
+  console.log(services);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (serviceSelected) => {
+    setService(serviceSelected);
     setAnchorEl(null);
   };
 
   return (
     <div>
-      <List
-        component="nav"
-        aria-label="Service"
-        sx={{ bgcolor: 'background.paper' }}
-      >
-        <ListItem
-          button
-          id="lock-button"
-          aria-haspopup="listbox"
-          aria-controls="lock-menu"
-          aria-label="Services"
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
-          onClick={handleClickListItem}
+        onClick={handleClick}
         >
-          <ListItemText
-            primary={services[selectedIndex]}
-          />
-        </ListItem>
-      </List>
+        SERVICE
+      </Button>
       <Menu
-        id="lock-menu"
+        id="basic-menu"
         anchorEl={anchorEl}
-        open={!disable ? open : false}
+        open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'lock-button',
-          role: 'listbox',
+          'aria-labelledby': 'basic-button',
         }}
-      >
-        {services.map((option, index) => (
-          <MenuItem
-            key={option}
-            selected={index === selectedIndex}
-            onClick={(event) => handleMenuItemClick(event, index)}
-          >
-            {option}
+      >{services?.map((e, index) => (
+        <MenuItem key={index} onClick={(e) =>handleClose(e)}>
+          {e.servicename}
           </MenuItem>
         ))}
+        
       </Menu>
     </div>
   );

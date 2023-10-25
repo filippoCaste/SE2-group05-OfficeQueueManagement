@@ -39,7 +39,7 @@ function GetTicketComponent(props)
           API.getAllTickets()
             .then((tks) => {
               setNumberTicket(tks.length);
-              const ts = tks.filter((t) => t.workerid==0 && t.serviceid===service.id)
+              const ts = tks.filter((t) => t.serviceid===service.id && t.closeddate==null && t.counterid==0);
               setNoPeopleBefore(ts.length-1)
               setSelectedTicket(true);
             })

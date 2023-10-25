@@ -15,6 +15,7 @@ import CurrentTimeDisplay from '../components/CurrentTimeDisplay';
 import CounterMenu from '../components/CounterMenuComponents';
 import dayjs from 'dayjs'; // Import dayjs
 import ErrorContext from '../errorContext';
+import API from '../API';
 
 function Sample(props) {
   const {user} = props;
@@ -25,47 +26,22 @@ function Sample(props) {
   const [startDate, setStartDate] = useState(null); // State to store the start date
   const [closedDate, setClosedDate] = useState(null);     // State to store the closed date
   const [service,setService] = useState('');
-  const [counter,setCounter] = useState();
+  const [counter,setCounter] = useState(null);
   const [ticket,setTicket] = useState(null);
   const [counters,setCounters] = useState([]);
   const [services,setServices] = useState([]);
 
-  const fetchData = async () => {
+  const getAvailableCounters = async () => {
     try {
-      setIsLoading(true);
-      const servicesTemp = await getAllServices();
-  
-      setServices(servicesTemp);
-      
-      //to modify only the one available
-      const countersTemp = await getAllCounters();
-      setCounters(countersTemp);
-
-      getTicketbyService(services[0]);
+      const fetchedCounters = await API.getAllAvailableCounters();
+      setCounters(fetchedCounters);
     } catch (error) {
-      setTicket(null);
-      setService();
-      setCounter();
-      setServices([]);
       setCounters([]);
       handleErrors(error);
-    }
-    finally {
-      setIsLoading(false);
+    } finally {
     }
   };
-  const getTicketbyService = async () => {
-    try {
-      if(user && counter && service && !isLoading){
-          const ticketTemp = await API.getTicketbyService(service.id);
-          setTicket(ticketTemp);
-      }
-    }catch (error) {
-      setTicket(null);
-      setService();
-      setCounter();
-    }
-  }
+
   const handleStartClick = () => {
     setStartButtonDisabled(true);
     setStartDate(dayjs()); // Save the start date
@@ -81,14 +57,27 @@ function Sample(props) {
     setStartButtonDisabled(false);
   };
     useEffect(() => {
-        fetchData(); 
+      getAvailableCounters();
     },[user])
 
+    const getServicesById = async () => {
+      try {
+        if(counter){
+          const servicesSelected = await API.getServicesByCounterId(counter?.id);
+          setServices(servicesSelected);
+        }
+      } catch (error) {
+        setServices([]);
+        handleErrors(error);
+      } finally {
+      }
+    };
+
     useEffect(() =>{
-      getTicketbyService();
-    },[user, service,counter])
-
-
+      //api services
+      getServicesById();
+    }
+    ,[counter])
 
   return (
     <Container>
@@ -101,10 +90,10 @@ function Sample(props) {
             <Typography variant="h6">Counter #</Typography>
           </Grid>
           <Grid item>
-            <CounterMenu disable={startButtonDisabled} counters={counters}/>
+            <CounterMenu disable={startButtonDisabled} counters={counters} counter={counter} setCounter={setCounter}/>
           </Grid>
             <Grid item>
-                <ServiceMenu disable={startButtonDisabled} services={services} />
+                <ServiceMenu disable={startButtonDisabled} services={services} service={service} setService={setService} />
             </Grid>
         </Grid>
 

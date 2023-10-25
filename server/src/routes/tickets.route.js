@@ -60,7 +60,7 @@ router.post("/print/:serviceId", async (req, res) => {
 /**
  * @returns the last added ticket (to be called immediately after printTicket/:serviceId)
  */
-router.get("/getAll", async (req, res) => {
+router.get("/getAllTickets", async (req, res) => {
   try {
     const ticket = await ticketDao.getAllTickets();
     res.status(200).json(ticket);
