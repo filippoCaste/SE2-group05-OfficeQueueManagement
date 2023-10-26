@@ -11,13 +11,11 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import API from '../API';
-import ErrorContext from '../errorContext';
 
 function BackOfficeLayout(props) {
   const { user } = props;
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [tickets, setTickets] = useState([]);
-  const { handleErrors } = useContext(ErrorContext);
 
   const getTickets = async () => {
     try {

@@ -13,13 +13,11 @@ import { useState , useEffect,useContext} from "react";
 import CurrentTimeDisplay from '../components/CurrentTimeDisplay';
 import CounterMenu from '../components/CounterMenuComponents';
 import dayjs from 'dayjs'; // Import dayjs
-import ErrorContext from '../errorContext';
 import API from '../API';
 
 function OfficePage(props) {
   const {user} = props;
   const navigate = useNavigate();
-   const {handleErrors} = useContext(ErrorContext);
   const [isLoading, setIsLoading] = useState(false);
   const [startButtonDisabled, setStartButtonDisabled] = useState(false);
   const [startDate, setStartDate] = useState(null); // State to store the start date
@@ -74,8 +72,6 @@ function OfficePage(props) {
 
     useEffect(() => {
       getTicketByCounter(counter?.id);
-      
-      console.log(ticket)
     },[counter])
 
   return (
