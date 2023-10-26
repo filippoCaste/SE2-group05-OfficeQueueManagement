@@ -27,7 +27,7 @@ function TimeDisplay(props) {
       <p>Current Time: {currentTime}</p>
     </div>
     <div>
-      <p>Start Time: {startDate ? startDate?.format('YYYY-MM-DD HH:mm:ss') : 0}</p>
+      <p>Start Time: {startDate ? startDate?.format('YYYY-MM-DD HH:mm:ss') : "Not yet started"}</p>
     </div>
     </>
   );

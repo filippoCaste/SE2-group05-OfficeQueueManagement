@@ -95,8 +95,8 @@ router.get(
   }
 );
 
-// 1. Update the title, by providing all the relevant information
-// PUT /api/titles
+// 1. Update the ticket, by providing all the relevant information
+// PUT /api/ticket/:ticketid
 router.put("/:ticketid", [check("ticketid").isInt()], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -131,6 +131,47 @@ router.put("/:ticketid", [check("ticketid").isInt()], async (req, res) => {
     });
   }
 });
+
+// 1. Update the ticket, by providing all the relevant information
+// PUT /api/ticket/:ticketid/close
+router.put(
+  "/:ticketid/close",
+  [check("ticketid").isInt()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        error: errors
+          .array()
+          .map((error) => error.msg)
+          .join(" "),
+      });
+    }
+    try {
+      if (
+        !req.body.hasOwnProperty("closeddate") ||
+        !req.body.hasOwnProperty("ticketid")
+      ) {
+        return res.status(401).json({ error: "User cannot do this operation" });
+      }
+      const result = await ticketDao.closeTicket(
+        req.body.ticketid,
+        req.body.closeddate
+      ); // NOTE: updatePage returns the newly updated object
+
+      console.log(result);
+      if (result && result?.error) {
+        res.status(404).json(result);
+      } else {
+        res.json(result);
+      }
+    } catch (err) {
+      res.status(503).json({
+        error: `Database error during the creation of the updated ticket: ${err}`,
+      });
+    }
+  }
+);
 
 // */
 exports.ticketsRouter = router;

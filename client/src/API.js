@@ -304,6 +304,43 @@ const setOperatingTicket = async (counter, ticket) => {
     if (error.hasOwnProperty("error")) {
       throw error;
     } else {
+      console.log(error);
+      throw { error: "Cannot parse server response" };
+    }
+  }
+};
+const setCloseTicket = async (closeddate, ticket) => {
+  try {
+    console.log(closeddate);
+    console.log(ticket);
+    if (!closeddate || !ticket)
+      throw { error: "closeddate or ticket is not well formatted" };
+
+    const response = await fetch(
+      SERVER_URL + "/tickets/" + ticket.id + "/close",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          closeddate: closeddate,
+          ticketid: ticket.id,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errMessage = await response.json();
+      throw errMessage;
+    } else {
+      const ticket = await response.json();
+      return ticket;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      console.log(error);
       throw { error: "Cannot parse server response" };
     }
   }
@@ -346,6 +383,7 @@ const API = {
   getTicketByCounterId,
   getServicesByCounterId,
   setOperatingTicket,
+  setCloseTicket,
 };
 
 export default API;

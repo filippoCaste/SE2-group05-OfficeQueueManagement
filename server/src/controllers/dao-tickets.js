@@ -130,8 +130,6 @@ exports.getAllTickets = () => {
 
 // This function updates an existing ticket given its counter
 exports.updateTicket = (ticketid, counterid) => {
-  console.log(ticketid);
-  console.log(counterid);
   return new Promise((resolve, reject) => {
     const sql = "UPDATE tickets SET counterid = ? WHERE id = ?;";
     db.run(sql, [counterid, ticketid], function (err) {
@@ -143,7 +141,27 @@ exports.updateTicket = (ticketid, counterid) => {
         resolve({ error: "No ticket was updated." });
         return;
       }
-      resolve(exports.getTicket());
+      const ticket = exports.getTicket(ticketid);
+      resolve(ticket);
+    });
+  });
+};
+
+// This function updates an existing ticket given its counter
+exports.closeTicket = (ticketid, closeddate) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE tickets SET closeddate = ? WHERE id = ?;";
+    db.run(sql, [closeddate, ticketid], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (this.changes !== 1) {
+        resolve({ error: "No ticket was updated." });
+        return;
+      }
+      const ticket = exports.getTicket(ticketid);
+      resolve(ticket);
     });
   });
 };

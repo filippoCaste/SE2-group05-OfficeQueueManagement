@@ -87,9 +87,10 @@ exports.getTicketByCounterId = (counterid) => {
             AND cs.counterid=?
             GROUP BY t1.serviceid
             ORDER BY queue_length DESC
-			      LIMIT 1)
+			      LIMIT 1) AS result
     WHERE t.closeddate IS NULL
     AND t.counterid = 0
+	  AND result.serviceid = t.serviceid
     ORDER BY t.creationdate
     LIMIT 1;
     `;

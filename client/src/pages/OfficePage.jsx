@@ -21,7 +21,6 @@ function OfficePage(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [startButtonDisabled, setStartButtonDisabled] = useState(false);
   const [startDate, setStartDate] = useState(null); // State to store the start date
-  const [closedDate, setClosedDate] = useState(null);     // State to store the closed date
   const [counter,setCounter] = useState(null);
   const [ticket,setTicket] = useState(null);
   const [counters,setCounters] = useState([]);
@@ -46,13 +45,12 @@ function OfficePage(props) {
     }
   };
   const handleNextClick = () => {
-    setClosedDate(dayjs());
     //must send both start,closed date, service and counter
-
+    API.setCloseTicket(dayjs().format(),ticket);
     //must get next ticket if any available
     //refresh
+    setTicket(getTicketByCounter(counter?.id));
     setStartDate();
-    setClosedDate();
     setStartButtonDisabled(false);
   };
 
