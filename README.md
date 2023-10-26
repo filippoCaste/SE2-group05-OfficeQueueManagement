@@ -107,7 +107,10 @@ The server is built using Node.js and Express.js, which serves as a RESTful API 
     1
     ```
 - `/api/tickets/:serviceid`:
-    Given a service id, this route returns the oldest associated open ticket.
+    Given a service id, this route returns the oldest associated open ticket that has not been served.
     ```json
-    
+    {
+        "id": 4,
+        "creationDate": "2023-10-25T17:34:52+02:00"
+    }
     ```

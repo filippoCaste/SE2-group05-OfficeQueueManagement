@@ -79,8 +79,6 @@ exports.getticketByService = (serviceId) => {
     db.get(sql, [serviceId], (err, ticket) => {
       if (err) {
         reject(err);
-      } else if (ticket === undefined) {
-        resolve({ error: "ticket not available" });
       } else {
         const ticketObject = {
           id: ticket.id,
@@ -92,7 +90,6 @@ exports.getticketByService = (serviceId) => {
   });
 };
 exports.getTicketByCounterId = (counterid) => {
-  console.log("here")
   return new Promise((resolve, reject) => {
     const sql = `
     SELECT t.id, t.creationdate

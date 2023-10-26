@@ -83,7 +83,7 @@ router.get("/counters/:counterid/tickets", async (req, res) => {
 // GET /api/tickets/<serviceId>
 // Given a service id, this route returns the oldest associated open ticket
 // it also check credentials
-router.get("/:serviceid", [check("id").isInt({ min: 1 })], async (req, res) => {
+router.get("/:serviceid", [check("serviceid").isInt({ min: 1 })], async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -94,19 +94,8 @@ router.get("/:serviceid", [check("id").isInt({ min: 1 })], async (req, res) => {
           .join(" "),
       });
     }
-    const result = await ticketDao.getticketByService(req.params.id);
-    if (result.error) {
-      res.status(404).json(result);
-    } else {
-      const today = dayjs();
-      const creationDate = dayjs(result.creationdate);
-      if (req?.user || (creationDate.isValid() && today.isAfter(creationDate)))
-        res.json(result);
-      else
-        return res.status(401).json({
-          error: "Cannot retrieve that ticket because date is after today!",
-        });
-    }
+    const result = await ticketDao.getticketByService(req.params.serviceid);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);
   }
