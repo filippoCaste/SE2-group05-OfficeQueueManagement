@@ -375,8 +375,6 @@ const getCountersDetails = async () => {
     const response = await fetch(SERVER_URL + `/counters/details`, {
       method: "GET",
     });
-    console.log(314);
-    console.log(response);
     if (response.ok) {
       const counters = await response.json();
       return counters;

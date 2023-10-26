@@ -29,9 +29,10 @@ const queueRows = [
   createData('Gingerbread', 356, 16.0),
 ];
 
-function QueueTable() {
+function QueueTable(props) {
   return (
     <TableContainer component={Paper}>
+      {typeof props.counterTickets}
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -41,16 +42,16 @@ function QueueTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {queueRows.map((row) => (
+          {props.counterTickets.map((row) => (
             <TableRow
-              key={row.ticketId}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.service}
+                {row.servicename}
               </TableCell>
-              <TableCell align="right">{row.ticketId}</TableCell>
-              <TableCell align="right">{row.estimatedTime}</TableCell>
+              <TableCell align="right">{row.id}</TableCell>
+              <TableCell align="right">?</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -65,6 +66,7 @@ function CounterCard(props) {
       <CardContent>
         <Typography variant="h5" component="div">
           Counter #{props.counterInfo.counterNum}
+          <br />
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           services:
@@ -80,7 +82,7 @@ function CounterCard(props) {
             color="primary"
           />
         </Typography>
-        <QueueTable />
+        <QueueTable counterTickets={props.counterInfo.tickets} />
       </CardContent>
     </Card>
   );
@@ -90,22 +92,35 @@ function CountersBord() {
   const [countersData, setCountersData] = useState([]);
 
   useEffect(() => {
-    API.getCountersDetails().then((c) => {
+    API.getCountersDetails().then((groupedCounters) => {
+      console.log(groupedCounters);
       const temp = [];
-      Object.entries(c).map(([key, value]) => {
-        const services = [];
-        value.map((c) => {
-          services.push(c.servicename);
+      let groupedTickets;
+
+      API.getAllTickets().then((t) => {
+        groupedTickets = t.reduce(function (r, a) {
+          r[a.counterid] = r[a.counterid] || [];
+          r[a.counterid].push(a);
+          return r;
+        }, Object.create(null));
+
+        Object.entries(groupedCounters).map(([key, value]) => {
+          const services = [];
+          value.map((c) => {
+            services.push(c.servicename);
+          });
+
+          temp.push({
+            counterNum: key,
+            services,
+            currentlyServing: 135,
+            tickets: groupedTickets[key] ? groupedTickets[key] : [],
+          });
         });
 
-        temp.push({
-          counterNum: key,
-          services,
-          currentlyServing: 135,
-        });
+        console.log(temp);
+        setCountersData(temp);
       });
-      console.log(temp);
-      setCountersData(temp);
     });
   }, []);
   // const countersData = [

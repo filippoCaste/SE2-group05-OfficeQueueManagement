@@ -113,7 +113,7 @@ exports.printTicketByService = (serviceId) => {
  */
 exports.getAllTickets = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM tickets ORDER BY id ; ";
+    const sql = "SELECT t.id, creationdate, closeddate, counterid, servicename, serviceid FROM tickets as t JOIN services as s ON s.id=t.serviceid WHERE closeddate IS NULL ORDER BY t.id;";
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
