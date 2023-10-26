@@ -139,35 +139,31 @@ async function getAvailableCounters() {
 
 
 async function getCounterById(id) {
-  
-  const response = await fetch(SERVER_URL+`/counters/${id}`);
+
+  const response = await fetch(SERVER_URL + `/counters/${id}`);
   const question = await response.json();
 
-  if (response.ok) 
-  {
+  if (response.ok) {
     const e = question;
-    return {  id_counter: e.id_counter};
-  } 
-  else 
-  {
-    throw question; 
+    return { id_counter: e.id_counter };
+  }
+  else {
+    throw question;
   }
 }
 async function getServicesByCounterId(counterid) {
 
-  const response = await fetch(SERVER_URL+`/counters/${counterid}/services`);
+  const response = await fetch(SERVER_URL + `/counters/${counterid}/services`);
   const services = await response.json();
   console.log(services);
-  if (response.ok) 
-  {
+  if (response.ok) {
     return services.map((e) => ({
       serviceid: e.serviceid,
       servicename: e.servicename
     }));
-  } 
-  else 
-  {
-    throw services; 
+  }
+  else {
+    throw services;
   }
 }
 
@@ -311,6 +307,29 @@ const getAllTickets = async () => {
   }
 }
 
+const getCountersDetails = async () => {
+  try {
+    const response = await fetch(SERVER_URL + `/counters/details`, {
+      method: "GET",
+    });
+    console.log(314);
+    console.log(response);
+    if (response.ok) {
+      const counters = await response.json();
+      return counters;
+    } else {
+      const errMessage = await response.json();
+      throw errMessage;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      throw { error: "Cannot parse server response" };
+    }
+  }
+}
+
 const API = {
   login,
   logout,
@@ -325,7 +344,8 @@ const API = {
   getAllTickets,
   getAvailableCounters,
   getTicketByCounterId,
-  getServicesByCounterId
+  getServicesByCounterId,
+  getCountersDetails
 };
 
 export default API;
