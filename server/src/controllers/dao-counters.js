@@ -87,3 +87,24 @@ exports.getCounterById = (id) => {
     });
   };
 
+/**
+ * @returns Counters with services
+ */
+exports.getCountersDetails = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM configurationService JOIN services
+      ON services.id = configurationService.serviceid`;
+        db.all(sql, (err, rows) => {
+            if (err) {
+                return reject(err);
+            } else {
+                let counters = rows.reduce(function (r, a) {
+                    r[a.counterid] = r[a.counterid] || [];
+                    r[a.counterid].push(a);
+                    return r;
+                }, Object.create(null));
+                resolve(counters);
+            }
+        });
+    });
+}
