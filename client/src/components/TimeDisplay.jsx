@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-function CurrentTimeDisplay() {
+function TimeDisplay(props) {
+  const {startDate} = props;
   const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
@@ -21,10 +22,15 @@ function CurrentTimeDisplay() {
   }, []);
 
   return (
+    <>
     <div>
       <p>Current Time: {currentTime}</p>
     </div>
+    <div>
+      <p>Start Time: {startDate ? startDate?.format('YYYY-MM-DD HH:mm:ss') : 0}</p>
+    </div>
+    </>
   );
 }
 
-export default CurrentTimeDisplay;
+export default TimeDisplay;

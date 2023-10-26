@@ -20,18 +20,22 @@ function MainPage(props) {
     <Container>
       <Box
         display="flex"
-        justifyContent="center"
+        justifyContent="left"
         alignItems="center"
         minHeight="80vh"
       >
         {!isLoading ? 
-            <Button
+            <Button 
               variant="contained"
               color="primary"
-              size="large"
+              size="lg"
+            style={{ width: '30vw', height:'30vw' }}
               onClick={handleClick}
             >
-              <ConfirmationNumberIcon/>
+            <ConfirmationNumberIcon style={{
+              width: '50%', // Make the image fill the container
+              height: '50%', // Make the image fill the container
+}}/>
             </Button>:
                     <Box
                         display="flex"
@@ -43,6 +47,7 @@ function MainPage(props) {
                     </Box>
             }
       </Box>
+      {/* TABLE HERE */}
     </Container>
   );
 }

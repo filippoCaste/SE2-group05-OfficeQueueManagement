@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useNavigate } from "react-router-dom";
 import { useState , useEffect,useContext} from "react";
-import CurrentTimeDisplay from '../components/CurrentTimeDisplay';
+import CurrentTimeDisplay from '../components/TimeDisplay';
 import CounterMenu from '../components/CounterMenuComponents';
 import dayjs from 'dayjs'; // Import dayjs
 import API from '../API';
@@ -63,7 +63,6 @@ function OfficePage(props) {
       setTicket(fetchedTicket);
     } catch (error) {
       setTicket();
-      handleErrors(error);
     }
   };
     useEffect(() => {
@@ -93,7 +92,7 @@ function OfficePage(props) {
           <Typography variant="body1">Currently serving ticket #{ticket?.id}</Typography>
         </Grid>
         <Grid item>
-          <CurrentTimeDisplay />
+          <CurrentTimeDisplay startDate={startDate} />
         </Grid>
         <Grid item>
           <div>
