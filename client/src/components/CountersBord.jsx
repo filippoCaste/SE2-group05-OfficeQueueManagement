@@ -130,7 +130,9 @@ function CountersBord() {
     <>
       <Grid container spacing={2}>
         {countersData.map((c) => (
-          <CounterCard counterInfo={c} />
+          <Grid item md={4}>
+            <CounterCard counterInfo={c} />
+          </Grid>
         ))}
       </Grid>
     </>
