@@ -64,7 +64,7 @@ function GetTicketComponent(props)
         ))}
       </List>
 
-        {selectedTicket ? <><h2> You ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before you turn.</p></> :  <></>  }
+        {selectedTicket ? <><h2> Your ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before your turn.</p></> :  <></>  }
 
     </> 
     );
