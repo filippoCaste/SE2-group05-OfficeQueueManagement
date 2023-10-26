@@ -83,11 +83,11 @@ exports.getTicketByCounterId = (counterid) => {
 			SELECT t1.serviceid, COUNT(*) AS queue_length
             FROM tickets AS t1, configurationService AS cs
             WHERE t1.counterid=0
-			AND cs.serviceid=t1.serviceid
-			AND cs.counterid=?
+            AND cs.serviceid=t1.serviceid
+            AND cs.counterid=?
             GROUP BY t1.serviceid
             ORDER BY queue_length DESC
-			LIMIT 1)
+			      LIMIT 1)
     WHERE t.closeddate IS NULL
     AND t.counterid = 0
     ORDER BY t.creationdate

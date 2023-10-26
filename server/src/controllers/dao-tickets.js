@@ -133,7 +133,7 @@ exports.updateTicket = (ticketid, counterid) => {
   console.log(ticketid);
   console.log(counterid);
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE tickets SET counterid = ?, closeddate=0 WHERE id = ?;";
+    const sql = "UPDATE tickets SET counterid = ? WHERE id = ?;";
     db.run(sql, [counterid, ticketid], function (err) {
       if (err) {
         reject(err);
