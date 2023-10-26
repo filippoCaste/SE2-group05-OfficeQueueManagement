@@ -12,12 +12,16 @@ export default function CounterMenu(props)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   
-  const handleClick = (event) => {
+  const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (counter) => {
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
 
-    setCounter(counter);
+    const handleClick = (counter) => {
+  
+    setCounter( counter);
     setAnchorEl(null);
   }
 
@@ -29,9 +33,9 @@ export default function CounterMenu(props)
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        onClick={handleOpen}
         >
-        {counter ? counter?.id : "CounterID"}
+        {counter?.id ? counter?.id : "CounterID"}
       </Button>
       <Menu
         id="basic-menu"
@@ -42,7 +46,7 @@ export default function CounterMenu(props)
           'aria-labelledby': 'basic-button',
         }}
       >{counters.map((e, index) => (
-        <MenuItem key={index} onClick={() =>handleClose(e)}>
+        <MenuItem key={index} onClick={() =>handleClick(e)}>
           {e.id}
           </MenuItem>
         ))}

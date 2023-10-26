@@ -69,35 +69,66 @@ router.get("/getAllTickets", async (req, res) => {
   }
 });
 
-router.get("/counters/:counterid/tickets", async (req, res) => {
-  try {
-    console.log("here")
-    const ticket = await ticketDao.getTicketByCounterId(req.params.counterid);
-    res.status(200).json(ticket);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 // 3. Retrieve an open ticket, given its serviceId
 // GET /api/tickets/<serviceId>
 // Given a service id, this route returns the oldest associated open ticket
 // it also check credentials
-router.get("/:serviceid", [check("serviceid").isInt({ min: 1 })], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        error: errors
-          .array()
-          .map((error) => error.msg)
-          .join(" "),
-      });
+router.get(
+  "/:serviceid",
+  [check("serviceid").isInt({ min: 1 })],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({
+          error: errors
+            .array()
+            .map((error) => error.msg)
+            .join(" "),
+        });
+      }
+      const result = await ticketDao.getticketByService(req.params.serviceid);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
     }
-    const result = await ticketDao.getticketByService(req.params.serviceid);
-    res.status(200).json(result);
+  }
+);
+
+// 1. Update the title, by providing all the relevant information
+// PUT /api/titles
+router.put("/:ticketid", [check("ticketid").isInt()], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      error: errors
+        .array()
+        .map((error) => error.msg)
+        .join(" "),
+    });
+  }
+  try {
+    if (
+      !req.body.hasOwnProperty("counterid") ||
+      !req.body.hasOwnProperty("ticketid")
+    ) {
+      return res.status(401).json({ error: "User cannot do this operation" });
+    }
+    const result = await ticketDao.updateTicket(
+      req.body.ticketid,
+      req.body.counterid
+    ); // NOTE: updatePage returns the newly updated object
+
+    console.log(result);
+    if (result && result?.error) {
+      res.status(404).json(result);
+    } else {
+      res.json(result);
+    }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(503).json({
+      error: `Database error during the creation of the updated ticket: ${err}`,
+    });
   }
 });
 

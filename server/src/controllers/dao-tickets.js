@@ -1,6 +1,6 @@
 "use strict";
 /* Data Access Object (DAO) module for accessing tickets data */
-const db = require('../../db');
+const db = require("../../db");
 const dayjs = require("dayjs");
 /*
  * API: tickets
@@ -89,40 +89,6 @@ exports.getticketByService = (serviceId) => {
     });
   });
 };
-exports.getTicketByCounterId = (counterid) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
-    SELECT t.id, t.creationdate
-    FROM tickets AS t, (
-			SELECT t1.serviceid, COUNT(*) AS queue_length
-            FROM tickets AS t1, configurationService AS cs
-            WHERE t1.counterid=0
-			AND cs.serviceid=t1.serviceid
-			AND cs.counterid=?
-            GROUP BY t1.serviceid
-            ORDER BY queue_length DESC
-			LIMIT 1)
-    WHERE t.closeddate IS NULL
-    AND t.counterid = 0
-    ORDER BY t.creationdate
-    LIMIT 1;
-    `;
-    db.get(sql, [counterid], (err, ticket) => {
-      if (err) {
-        reject(err);
-      } else if (ticket === undefined) {
-        resolve({ error: "ticket not available" });
-      } else {
-        const ticketObject = {
-          id: ticket.id,
-          creationDate: ticket.creationdate,
-        };
-        resolve(ticketObject); // Resolve the Promise with the ticketObject
-      }
-    });
-  });
-};
-
 
 /**
  * Print the ticket and enqueue it according to the service.
@@ -140,16 +106,15 @@ exports.printTicketByService = (serviceId) => {
       }
     });
   });
-}
+};
 
 /**
  * @returns all tickets
  */
 exports.getAllTickets = () => {
   return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT * FROM tickets ORDER BY id ; ";
-    db.all(sql, (err,rows) => {
+    const sql = "SELECT * FROM tickets ORDER BY id ; ";
+    db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -157,11 +122,44 @@ exports.getAllTickets = () => {
           const ticket = Object.assign({}, e, {});
           return ticket;
         });
-        resolve(tickets)
+        resolve(tickets);
       }
     });
   });
-}
+};
+
+// This function updates an existing ticket given its counter
+exports.updateTicket = (ticketid, counterid) => {
+  console.log(ticketid);
+  console.log(counterid);
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE tickets SET counterid = ?, closeddate=0 WHERE id = ?;";
+    db.run(sql, [counterid, ticketid], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (this.changes !== 1) {
+        resolve({ error: "No ticket was updated." });
+        return;
+      }
+      resolve(exports.getTicket());
+    });
+  });
+};
+
+exports.getTicket = (ticketid) => {
+  return new Promise((resolve, reject) => {
+    const sql = "Select * FROM tickets WHERE id = ?;";
+    db.get(sql, [ticketid], function (err, row) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(row);
+    });
+  });
+};
 
 /*
 // This function retrieves the whole list of tickets from the database.

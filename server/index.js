@@ -11,7 +11,7 @@ const userRoutes = require("./src/routes/user.route.js").userRouter;
 const ticketsRoutes = require("./src/routes/tickets.route.js").ticketsRouter;
 const servicesRoutes = require("./src/routes/services.route.js").servicesRouter;
 const countersRoutes = require("./src/routes/counters.route.js").countersRouter;
-console.log("here")
+
 /*** init express and set up the middlewares ***/
 const app = express(); // application object app
 app.use(morgan("dev")); // Register a middleware
