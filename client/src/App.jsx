@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Sample from './pages/Sample';
+import OfficePage from './pages/OfficePage';
 function App() {
   const [userLogged, setUserLogged] = useState({});            //used to store infos of the logged user
   const [loggedin, setLoggedin] = useState(false); 
@@ -140,7 +140,7 @@ function App() {
               path="/"
               element={
                 loggedin ? (
-                  <Sample user={userLogged} />
+                  <OfficePage user={userLogged} />
                 ) : (
                   <MainPage />
                 )

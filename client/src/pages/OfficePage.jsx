@@ -16,7 +16,7 @@ import dayjs from 'dayjs'; // Import dayjs
 import ErrorContext from '../errorContext';
 import API from '../API';
 
-function Sample(props) {
+function OfficePage(props) {
   const {user} = props;
   const navigate = useNavigate();
    const {handleErrors} = useContext(ErrorContext);
@@ -41,8 +41,11 @@ function Sample(props) {
 
 
   const handleStartClick = () => {
-    setStartButtonDisabled(true);
-    setStartDate(dayjs()); // Save the start date
+    if(counter != undefined && counter?.hasOwnProperty("id_counter") && ticket != undefined || ticket?.hasOwnProperty("id")){
+      setStartButtonDisabled(true);
+      setStartDate(dayjs()); // Save the start date
+    API.setOperatingTicket(counter,ticket);
+    }
   };
   const handleNextClick = () => {
     setClosedDate(dayjs());
@@ -72,6 +75,7 @@ function Sample(props) {
     useEffect(() => {
       getTicketByCounter(counter?.id);
       
+      console.log(ticket)
     },[counter])
 
   return (
@@ -119,4 +123,4 @@ function Sample(props) {
   );
 }
 
-export default Sample;
+export default OfficePage;

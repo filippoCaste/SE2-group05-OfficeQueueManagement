@@ -54,7 +54,7 @@ describe('GetTicketComponent', () => {
                                         <GetTicketComponent listServices={[]} />
                                     </MemoryRouter>);
   
-    const numberTicketElement = queryByText(/You ticket number is/i);
+    const numberTicketElement = queryByText(/Your ticket number is/i);
     const peopleBeforeElement = queryByText(/There are/i);
   
     expect(numberTicketElement).toBeNull();
