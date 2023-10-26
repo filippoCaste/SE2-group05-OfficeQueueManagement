@@ -6,6 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,6 +17,7 @@ import API from '../API'
 function GetTicketComponent(props)
 {
     const [selectedService, setSelectedService] = useState('');
+    const navigate = useNavigate();
 
     // eslint-disable-next-line react/prop-types
     let services=Array.from(props.listServices);
@@ -45,6 +47,10 @@ function GetTicketComponent(props)
             })
           });
     };
+
+    const handleBack = () => {
+      navigate("/");
+    }
   
     return (
       <>
@@ -56,7 +62,6 @@ function GetTicketComponent(props)
           <ListItem
             button
             key={index}
-            selected={selectedService === item}
             onClick={() => handleItemClick(item)}
           >
             <ListItemText primary={item.serviceName} />
@@ -65,6 +70,16 @@ function GetTicketComponent(props)
       </List>
 
         {selectedTicket ? <><h2> Your ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before your turn.</p></> :  <></>  }
+
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleBack}
+          style={{ position: 'fixed', bottom: 30, left: 30 }}
+        >
+          <ArrowBackIcon />
+        </Button>
 
     </> 
     );
