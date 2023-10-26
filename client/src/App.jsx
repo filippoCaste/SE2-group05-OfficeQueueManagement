@@ -6,33 +6,19 @@ import { LoginForm } from './components/AuthComponents';
 import BackOfficeLayout from './pages/BackOfficeLayout';
 import GetTicketComponent from './components/GetTicketComponent';
 import API from './API';
-import { Row, Alert } from 'react-bootstrap';
-import ErrorContext from './errorContext';
 import AppNavBar from "./components/AppBar.jsx";
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Sample from './pages/Sample';
+import OfficePage from './pages/OfficePage';
 function App() {
   const [userLogged, setUserLogged] = useState({});            //used to store infos of the logged user
   const [loggedin, setLoggedin] = useState(false); 
-  const [message, setMessage] = useState('');
+
 
   ///////////////////////
   const [listServices, setListServices] = useState({});
 
 
-    // If an error occurs, the error message will be shown
-  const handleErrors = (err) => {
-      let msg = '';
-      if (err.error) msg = err.error;
-      else if (String(err) === "string") msg = String(err);
-      else msg = "Unknown Error";
-      if(!(msg ==="Not authenticated" && !loggedin))   //exclude the case I am in FrontOffice
-                setMessage({msg:msg, type:"danger"});
-  }
-  
     const handleLogin = async (credentials) => {
       try {
         const user = await API.login(credentials);
@@ -42,12 +28,11 @@ function App() {
           const usersInfo = await API.getUsers();
           setUsers(usersInfo);
         }
-        setMessage({ msg: `Welcome, ${user.username}!`, type: 'success' });
+        console.log(`Welcome, ${user.username}!`);
       } catch (err) {
         setUserLogged({});
         setUsers([]);
         setLoggedin(false);
-        handleErrors(err);
         throw err;
       }
     };
@@ -57,10 +42,9 @@ function App() {
       setUserLogged({});
       setLoggedin(false);
       setUsers([]);
-      setMessage({ msg: `Successfully loggedout`, type: 'success' });
+      console.log("Successfully loggedout")
       return true;
       } catch (err) {
-        handleErrors(err);
         return false;
       }
     };
@@ -75,9 +59,8 @@ function App() {
             const usersInfo = await API.getUsers();
             setUsers(usersInfo);
           }
-          setMessage({msg:"You are logged in", type: 'success'})
+          console.log("You are logged in")
         } catch (err) {
-          handleErrors(err);
           setUserLogged({});
         }
       };
@@ -108,20 +91,12 @@ function App() {
         height="100vh"
       >
        <BrowserRouter>
-      <ErrorContext.Provider value={{ handleErrors }}>
         <Routes>
           <Route
             element={
               <>
-               <Container fluid maxWidth="xl" >
+               <Container fluid="true" maxWidth="xl" >
                 <AppNavBar handleLogout={handleLogout} loggedin={loggedin} />
-                  {message && (
-                    <Box>
-                      <Alert variant={message.type} onClose={() => setMessage('')} dismissible>
-                        {message.msg}
-                      </Alert>
-                    </Box>
-                  )}
                   <Container
                     display="flex"
                     justifyContent="center"
@@ -140,7 +115,7 @@ function App() {
               path="/"
               element={
                 loggedin ? (
-                  <Sample user={userLogged} />
+                  <OfficePage user={userLogged} />
                 ) : (
                   <MainPage />
                 )
@@ -153,7 +128,6 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
-      </ErrorContext.Provider>
     </BrowserRouter>
     </Container>
   );

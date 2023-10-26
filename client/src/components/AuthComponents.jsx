@@ -1,14 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import ErrorContext from '../errorContext';
 
 function LoginForm(props) {
   const navigate = useNavigate();
-  const { handleErrors } = useContext(ErrorContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,10 +26,10 @@ function LoginForm(props) {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: "center",
         minHeight: '50vh',
+        maxWidth:"xl"
       }}
-      maxWidth="xl"
     >
       <Box
         component="form"

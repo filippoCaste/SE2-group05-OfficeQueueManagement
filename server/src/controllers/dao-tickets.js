@@ -6,29 +6,29 @@ const dayjs = require("dayjs");
  * API: tickets
  */
 // This function retrieves the whole list of tickets from the database.
-exports.getTickets = () => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
-    db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      const tickets = rows.map((e) => {
-        const ticket = Object.assign({}, e, {
-          creationDate: e.creationdate,
-          closedDate: e.closeddate,
-        });
-        delete ticket.creationdate; // removing lowercase
-        delete ticket.closeddate; // removing lowercase
-        return ticket;
-      });
-      const sortedtickets = [...tickets].sort(sortByCreationDate);
-      // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
-      resolve(sortedtickets);
-    });
-  });
-};
+// exports.getTickets = () => {
+//   return new Promise((resolve, reject) => {
+//     const sql =
+//       "SELECT p.id AS ticketNumber,p.creationdate, p.closeddate WHERE p.workerid= u.id;  ";
+//     db.all(sql, (err, rows) => {
+//       if (err) {
+//         reject(err);
+//       }
+//       const tickets = rows.map((e) => {
+//         const ticket = Object.assign({}, e, {
+//           creationDate: e.creationdate,
+//           closedDate: e.closeddate,
+//         });
+//         delete ticket.creationdate; // removing lowercase
+//         delete ticket.closeddate; // removing lowercase
+//         return ticket;
+//       });
+//       const sortedtickets = [...tickets].sort(sortByCreationDate);
+//       // WARNING: if implemented as if(filters[filter]) returns true also for filter = 'constructor' but then .filterFunction does not exists
+//       resolve(sortedtickets);
+//     });
+//   });
+// };
 
 /**
  * @returns the number of tickets that *are in the queue*, according to the serviceId
@@ -71,7 +71,7 @@ exports.getticketByService = (serviceId) => {
     SELECT id, creationdate
     FROM tickets
     WHERE closeddate IS NULL
-      AND workerid= 0
+      AND counterid = 0
       AND serviceid = ?
     ORDER BY creationdate
     LIMIT 1;
@@ -79,8 +79,6 @@ exports.getticketByService = (serviceId) => {
     db.get(sql, [serviceId], (err, ticket) => {
       if (err) {
         reject(err);
-      } else if (ticket === undefined) {
-        resolve({ error: "ticket not available" });
       } else {
         const ticketObject = {
           id: ticket.id,
@@ -98,7 +96,7 @@ exports.getticketByService = (serviceId) => {
 exports.printTicketByService = (serviceId) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "INSERT INTO tickets (creationdate, closeddate, workerid, serviceid) VALUES (?,NULL,0,?) ; ";
+      "INSERT INTO tickets (creationdate, closeddate, counterid, serviceid) VALUES (?,NULL,0,?) ; ";
     const today = dayjs().format();
     db.run(sql, [today, serviceId], (err) => {
       if (err) {
@@ -108,16 +106,15 @@ exports.printTicketByService = (serviceId) => {
       }
     });
   });
-}
+};
 
 /**
  * @returns all tickets
  */
 exports.getAllTickets = () => {
   return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT * FROM tickets ORDER BY id ; ";
-    db.all(sql, (err,rows) => {
+    const sql = "SELECT * FROM tickets ORDER BY id ; ";
+    db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -125,11 +122,44 @@ exports.getAllTickets = () => {
           const ticket = Object.assign({}, e, {});
           return ticket;
         });
-        resolve(tickets)
+        resolve(tickets);
       }
     });
   });
-}
+};
+
+// This function updates an existing ticket given its counter
+exports.updateTicket = (ticketid, counterid) => {
+  console.log(ticketid);
+  console.log(counterid);
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE tickets SET counterid = ? WHERE id = ?;";
+    db.run(sql, [counterid, ticketid], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (this.changes !== 1) {
+        resolve({ error: "No ticket was updated." });
+        return;
+      }
+      resolve(exports.getTicket());
+    });
+  });
+};
+
+exports.getTicket = (ticketid) => {
+  return new Promise((resolve, reject) => {
+    const sql = "Select * FROM tickets WHERE id = ?;";
+    db.get(sql, [ticketid], function (err, row) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(row);
+    });
+  });
+};
 
 /*
 // This function retrieves the whole list of tickets from the database.

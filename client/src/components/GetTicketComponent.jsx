@@ -6,6 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,6 +17,7 @@ import API from '../API'
 function GetTicketComponent(props)
 {
     const [selectedService, setSelectedService] = useState('');
+    const navigate = useNavigate();
 
     // eslint-disable-next-line react/prop-types
     let services=Array.from(props.listServices);
@@ -39,12 +41,16 @@ function GetTicketComponent(props)
           API.getAllTickets()
             .then((tks) => {
               setNumberTicket(tks.length);
-              const ts = tks.filter((t) => t.workerid==0 && t.serviceid===service.id)
+              const ts = tks.filter((t) => t.serviceid===service.id && t.closeddate==null && t.counterid==0);
               setNoPeopleBefore(ts.length-1)
               setSelectedTicket(true);
             })
           });
     };
+
+    const handleBack = () => {
+      navigate("/");
+    }
   
     return (
       <>
@@ -56,7 +62,6 @@ function GetTicketComponent(props)
           <ListItem
             button
             key={index}
-            selected={selectedService === item}
             onClick={() => handleItemClick(item)}
           >
             <ListItemText primary={item.serviceName} />
@@ -64,7 +69,17 @@ function GetTicketComponent(props)
         ))}
       </List>
 
-        {selectedTicket ? <><h2> You ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before you turn.</p></> :  <></>  }
+        {selectedTicket ? <><h2> Your ticket number is <b>{numberTicket}</b> </h2> <p>There are {noPeopleBefore} people before your turn.</p></> :  <></>  }
+
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleBack}
+          style={{ position: 'fixed', bottom: 30, left: 30 }}
+        >
+          <ArrowBackIcon />
+        </Button>
 
     </> 
     );

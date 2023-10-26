@@ -1,71 +1,56 @@
-import * as React from 'react';
+import React, { useState } from 'react'; // Import useState from React
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
 
-
-
-export default function CounterMenu(props) {
-  const {disable,counters} = props;
+export default function CounterMenu(props) 
+{
+  const {counters,setCounter,counter} = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
   const open = Boolean(anchorEl);
   
-  const handleClickListItem = (event) => {
+  const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-
   const handleClose = () => {
     setAnchorEl(null);
-  };
+  }
+
+    const handleClick = (counter) => {
+  
+    setCounter( counter);
+    setAnchorEl(null);
+  }
+
 
   return (
     <div>
-      <List
-        component="nav"
-        aria-label="Device settings"
-        sx={{ bgcolor: 'background.paper' }}
-      >
-        <ListItem
-          button
-          id="lock-button"
-          aria-haspopup="listbox"
-          aria-controls="lock-menu"
-          aria-label="Services"
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
-          onClick={handleClickListItem}
+        onClick={handleOpen}
         >
-          <ListItemText
-            primary={counters[selectedIndex]}
-          />
-        </ListItem>
-      </List>
+        {counter?.id ? counter?.id : "CounterID"}
+      </Button>
       <Menu
-        id="lock-menu"
+        id="basic-menu"
         anchorEl={anchorEl}
-        open={!disable ? open : false}
+        open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'lock-button',
-          role: 'listbox',
+          'aria-labelledby': 'basic-button',
         }}
-      >
-        {counters.map((option, index) => (
-          <MenuItem
-            key={option}
-            selected={index === selectedIndex}
-            onClick={(event) => handleMenuItemClick(event, index)}
-          >
-            {option}
+      >{counters.map((e, index) => (
+        <MenuItem key={index} onClick={() =>handleClick(e)}>
+          {e.id}
           </MenuItem>
         ))}
+        
       </Menu>
     </div>
   );

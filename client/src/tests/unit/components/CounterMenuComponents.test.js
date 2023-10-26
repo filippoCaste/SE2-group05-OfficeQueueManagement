@@ -2,48 +2,76 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import CounterMenu from '../../../components/CounterMenuComponents';
 
-describe('CounterMenu Component', () => {
-  test('Renders the initial selected counter', () => {
-    const counters = ['Counter 1', 'Counter 2', 'Counter 3'];
-    render(<CounterMenu counters={counters} disable={false} />);
-    
-    const selectedCounter = screen.getByText('Counter 1');
-    expect(selectedCounter).toBeInTheDocument();
+
+describe('CounterMenuComponents', () => {
+  test('CounterMenu opens and selects a counter', () => {
+    const counters = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const setCounter = jest.fn();
+  
+    render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
+  
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+  
+    const menuItems = screen.getAllByRole('menuitem');
+  
+    expect(menuItems).toHaveLength(counters.length);
+    counters.forEach((counter, index) => {
+      expect(menuItems[index]).toHaveTextContent(counter.id.toString());
+    });
+  
+    fireEvent.click(menuItems[1]);
+  
+    expect(setCounter).toHaveBeenCalledWith({"id": 2});
   });
   
-  test('Opens the menu when clicking on the list item', () => {
-    const counters = ['Counter 1', 'Counter 2', 'Counter 3'];
-    render(<CounterMenu counters={counters} disable={false} />);
+  test('CounterMenu displays the correct label', () => {
+    const counters = [{ id: 1 }];
+    const setCounter = jest.fn();
+    render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const listButton = screen.getByText('Counter 1');
-    fireEvent.click(listButton);
-    
-    const menu = screen.getByRole('menu');
-    expect(menu).toBeInTheDocument();
+    const button = screen.getByRole('button');
+    expect(button).toBeInTheDocument();
   });
   
-  test('Selects a different counter when a menu item is clicked', () => {
-    const counters = ['Counter 1', 'Counter 2', 'Counter 3'];
-    render(<CounterMenu counters={counters} disable={false} />);
+  test('CounterMenu displays menu items', () => {
+    const counters = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const setCounter = jest.fn();
+    render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const listButton = screen.getByText('Counter 1');
-    fireEvent.click(listButton);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
     
     const menuItems = screen.getAllByRole('menuitem');
-    fireEvent.click(menuItems[1]); // Click on 'Counter 2'
-    
-    const selectedCounter = screen.getByText('Counter 2');
-    expect(selectedCounter).toBeInTheDocument();
+    expect(menuItems).toHaveLength(counters.length);
   });
   
-  test('Does not open the menu when disabled', () => {
-    const counters = ['Counter 1', 'Counter 2', 'Counter 3'];
-    render(<CounterMenu counters={counters} disable={true} />);
+  test('CounterMenu calls setCounter when a menu item is clicked', () => {
+    const counters = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const setCounter = jest.fn();
+    render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const listButton = screen.getByText('Counter 1');
-    fireEvent.click(listButton);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+  
+    const menuItems = screen.getAllByRole('menuitem');
+    fireEvent.click(menuItems[1]);
+  
+    expect(setCounter).toHaveBeenCalledWith({"id": 2});
+  });
+  
+  test('CounterMenu does not call setCounter when the same counter is clicked', () => {
+    const counters = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const setCounter = jest.fn();
+    render(<CounterMenu counters={counters} setCounter={setCounter} counter={2} />);
     
-    const menu = screen.queryByRole('menu');
-    expect(menu).toBeNull();
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+  
+    const menuItems = screen.getAllByRole('menuitem');
+  
+    fireEvent.click(menuItems[1]);
+  
+    expect(setCounter).not.toHaveBeenCalledWith({ id: 1 });
   });
 });

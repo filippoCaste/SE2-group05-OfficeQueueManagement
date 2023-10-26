@@ -11,23 +11,14 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/counters", async (req, res) => {
+router.get("/:id/services", async (req, res) => {
   try {
-    const counters = await serviceDao.getCounters();
-    res.json(counters);
+    const services = await serviceDao.getServicesByCounterId(req.params.id);
+    res.json(services);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//Give Counter By Id
-router.get("/counters/:id", async (req, res) => {
-  try {
-    const counter = await serviceDao.getCounterById(req.params.id);
-    res.json(counter);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
 
 exports.servicesRouter = router;

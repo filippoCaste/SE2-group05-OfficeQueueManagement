@@ -10,65 +10,40 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useNavigate } from "react-router-dom";
 import { useState , useEffect,useContext} from "react";
-import ServiceMenu from '../components/ServiceMenuComponents';
 import CurrentTimeDisplay from '../components/CurrentTimeDisplay';
 import CounterMenu from '../components/CounterMenuComponents';
 import dayjs from 'dayjs'; // Import dayjs
-import ErrorContext from '../errorContext';
+import API from '../API';
 
-function Sample(props) {
+function OfficePage(props) {
   const {user} = props;
   const navigate = useNavigate();
-   const {handleErrors} = useContext(ErrorContext);
   const [isLoading, setIsLoading] = useState(false);
   const [startButtonDisabled, setStartButtonDisabled] = useState(false);
   const [startDate, setStartDate] = useState(null); // State to store the start date
   const [closedDate, setClosedDate] = useState(null);     // State to store the closed date
-  const [service,setService] = useState('');
-  const [counter,setCounter] = useState();
+  const [counter,setCounter] = useState(null);
   const [ticket,setTicket] = useState(null);
   const [counters,setCounters] = useState([]);
-  const [services,setServices] = useState([]);
 
-  const fetchData = async () => {
+  const getAvailableCounters = async () => {
     try {
-      setIsLoading(true);
-      const servicesTemp = await getAllServices();
-  
-      setServices(servicesTemp);
-      
-      //to modify only the one available
-      const countersTemp = await getAllCounters();
-      setCounters(countersTemp);
-
-      getTicketbyService(services[0]);
+      const fetchedCounters = await API.getAvailableCounters();
+      setCounters(fetchedCounters);
     } catch (error) {
-      setTicket(null);
-      setService();
-      setCounter();
-      setServices([]);
       setCounters([]);
       handleErrors(error);
-    }
-    finally {
-      setIsLoading(false);
+    } finally {
     }
   };
-  const getTicketbyService = async () => {
-    try {
-      if(user && counter && service && !isLoading){
-          const ticketTemp = await API.getTicketbyService(service.id);
-          setTicket(ticketTemp);
-      }
-    }catch (error) {
-      setTicket(null);
-      setService();
-      setCounter();
-    }
-  }
+
+
   const handleStartClick = () => {
-    setStartButtonDisabled(true);
-    setStartDate(dayjs()); // Save the start date
+    if(counter != undefined && counter?.hasOwnProperty("id_counter") && ticket != undefined || ticket?.hasOwnProperty("id")){
+      setStartButtonDisabled(true);
+      setStartDate(dayjs()); // Save the start date
+    API.setOperatingTicket(counter,ticket);
+    }
   };
   const handleNextClick = () => {
     setClosedDate(dayjs());
@@ -80,15 +55,24 @@ function Sample(props) {
     setClosedDate();
     setStartButtonDisabled(false);
   };
+
+  const getTicketByCounter = async (counterid) => {
+    try {
+
+      const fetchedTicket = await API.getTicketByCounterId(counterid);
+      setTicket(fetchedTicket);
+    } catch (error) {
+      setTicket();
+      handleErrors(error);
+    }
+  };
     useEffect(() => {
-        fetchData(); 
+      getAvailableCounters();
     },[user])
 
-    useEffect(() =>{
-      getTicketbyService();
-    },[user, service,counter])
-
-
+    useEffect(() => {
+      getTicketByCounter(counter?.id);
+    },[counter])
 
   return (
     <Container>
@@ -101,11 +85,8 @@ function Sample(props) {
             <Typography variant="h6">Counter #</Typography>
           </Grid>
           <Grid item>
-            <CounterMenu disable={startButtonDisabled} counters={counters}/>
+            <CounterMenu disable={startButtonDisabled} counters={counters} counter={counter} setCounter={setCounter}/>
           </Grid>
-            <Grid item>
-                <ServiceMenu disable={startButtonDisabled} services={services} />
-            </Grid>
         </Grid>
 
         <Grid item>
@@ -138,4 +119,4 @@ function Sample(props) {
   );
 }
 
-export default Sample;
+export default OfficePage;

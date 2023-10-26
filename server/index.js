@@ -4,12 +4,13 @@ const express = require("express"); // The core Express module that allows you t
 const morgan = require("morgan"); //  A logging middleware that logs HTTP requests to the console.
 const cors = require("cors"); //  A middleware that enables Cross-Origin Resource Sharing, allowing requests from different origins.
 
-const userDao = require("./src/controllers/dao-users"); // module for accessing the user table in the DB
+const userDao = require("./src/controllers/dao-users.js"); // module for accessing the user table in the DB
 
 const sessionRoutes = require("./src/routes/session.route.js").sessionRouter;
 const userRoutes = require("./src/routes/user.route.js").userRouter;
 const ticketsRoutes = require("./src/routes/tickets.route.js").ticketsRouter;
 const servicesRoutes = require("./src/routes/services.route.js").servicesRouter;
+const countersRoutes = require("./src/routes/counters.route.js").countersRouter;
 
 /*** init express and set up the middlewares ***/
 const app = express(); // application object app
@@ -60,6 +61,7 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tickets", ticketsRoutes);
 app.use("/api/services", servicesRoutes);
+app.use("/api/counters", countersRoutes);
 
 // Activating the server
 const PORT = 3001;
