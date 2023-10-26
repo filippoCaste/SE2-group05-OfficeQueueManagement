@@ -8,22 +8,22 @@ const db = require("../../db");
  * @returns all the counters offered by the OfficeQueueManagement
  */
 exports.getCounters = () => {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM counters ; ";
-    db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        const counters = rows.map((e) => {
-          const c = Object.create(null);
-          c.id_counter = e.id_counter;
-          c.userid = e.userid;
-          return c;
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM counters ; ";
+        db.all(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                const counters = rows.map((e) => {
+                    const c = Object.create(null);
+                    c.id_counter = e.id_counter;
+                    c.userid = e.userid;
+                    return c;
+                });
+                resolve(counters);
+            }
         });
-        resolve(counters);
-      }
     });
-  });
 };
 
 /**
@@ -31,24 +31,24 @@ exports.getCounters = () => {
  */
 
 exports.getAvailableCounters = () => {
-  return new Promise((resolve, reject) => {
-    const sql = `SELECT * 
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * 
       FROM counters WHERE userid=0 ; `;
-    db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        const counters = rows.map((e) => {
-          const c = Object.create(null);
-          c.id_counter = e.id_counter;
-          c.userid = e.userid;
-          return c;
-        });
+        db.all(sql, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                const counters = rows.map((e) => {
+                    const c = Object.create(null);
+                    c.id_counter = e.id_counter;
+                    c.userid = e.userid;
+                    return c;
+                });
 
-        resolve(counters);
-      }
+                resolve(counters);
+            }
+        });
     });
-  });
 };
 
 /**
@@ -56,28 +56,28 @@ exports.getAvailableCounters = () => {
  */
 
 exports.getCounterById = (id) => {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM counters WHERE id_counter=?";
-    db.get(sql, [id], (err, row) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      if (row == undefined) {
-        resolve({ error: "Counter not found." });
-      } else {
-        const counter = {
-          id_counter: row.id_counter,
-        };
-        resolve(counter);
-      }
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM counters WHERE id_counter=?";
+        db.get(sql, [id], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (row == undefined) {
+                resolve({ error: "Counter not found." });
+            } else {
+                const counter = {
+                    id_counter: row.id_counter,
+                };
+                resolve(counter);
+            }
+        });
     });
-  });
 };
 
 exports.getTicketByCounterId = (counterid) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
+    return new Promise((resolve, reject) => {
+        const sql = `
     SELECT t.id, t.creationdate
     FROM tickets AS t, (
 			SELECT t1.serviceid, COUNT(*) AS queue_length
@@ -94,18 +94,39 @@ exports.getTicketByCounterId = (counterid) => {
     ORDER BY t.creationdate
     LIMIT 1;
     `;
-    db.get(sql, [counterid], (err, ticket) => {
-      if (err) {
-        reject(err);
-      } else if (ticket === undefined) {
-        resolve({ error: "ticket not available" });
-      } else {
-        const ticketObject = {
-          id: ticket.id,
-          creationDate: ticket.creationdate,
-        };
-        resolve(ticketObject); // Resolve the Promise with the ticketObject
-      }
+        db.get(sql, [counterid], (err, ticket) => {
+            if (err) {
+                reject(err);
+            } else if (ticket === undefined) {
+                resolve({ error: "ticket not available" });
+            } else {
+                const ticketObject = {
+                    id: ticket.id,
+                    creationDate: ticket.creationdate,
+                };
+                resolve(ticketObject); // Resolve the Promise with the ticketObject
+            }
+        });
     });
-  });
 };
+/**
+ * @returns Counters with services
+ */
+exports.getCountersDetails = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM configurationService JOIN services
+      ON services.id = configurationService.serviceid`;
+        db.all(sql, (err, rows) => {
+            if (err) {
+                return reject(err);
+            } else {
+                let counters = rows.reduce(function (r, a) {
+                    r[a.counterid] = r[a.counterid] || [];
+                    r[a.counterid].push(a);
+                    return r;
+                }, Object.create(null));
+                resolve(counters);
+            }
+        });
+    });
+}
