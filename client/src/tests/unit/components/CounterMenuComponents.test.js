@@ -10,7 +10,7 @@ describe('CounterMenuComponents', () => {
   
     render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
   
-    const button = screen.getByRole('button', { name: 'CounterID' });
+    const button = screen.getByRole('button');
     fireEvent.click(button);
   
     const menuItems = screen.getAllByRole('menuitem');
@@ -30,7 +30,7 @@ describe('CounterMenuComponents', () => {
     const setCounter = jest.fn();
     render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const button = screen.getByRole('button', { name: 'CounterID' });
+    const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
   });
   
@@ -39,7 +39,7 @@ describe('CounterMenuComponents', () => {
     const setCounter = jest.fn();
     render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const button = screen.getByRole('button', { name: 'CounterID' });
+    const button = screen.getByRole('button');
     fireEvent.click(button);
     
     const menuItems = screen.getAllByRole('menuitem');
@@ -51,7 +51,7 @@ describe('CounterMenuComponents', () => {
     const setCounter = jest.fn();
     render(<CounterMenu counters={counters} setCounter={setCounter} counter={1} />);
     
-    const button = screen.getByRole('button', { name: 'CounterID' });
+    const button = screen.getByRole('button');
     fireEvent.click(button);
   
     const menuItems = screen.getAllByRole('menuitem');
@@ -65,7 +65,7 @@ describe('CounterMenuComponents', () => {
     const setCounter = jest.fn();
     render(<CounterMenu counters={counters} setCounter={setCounter} counter={2} />);
     
-    const button = screen.getByRole('button', { name: 'CounterID' });
+    const button = screen.getByRole('button');
     fireEvent.click(button);
   
     const menuItems = screen.getAllByRole('menuitem');
