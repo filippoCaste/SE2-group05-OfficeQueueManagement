@@ -365,7 +365,30 @@ const getAllTickets = async () => {
       throw { error: "Cannot parse server response" };
     }
   }
-};
+}
+
+const getCountersDetails = async () => {
+  try {
+    const response = await fetch(SERVER_URL + `/counters/details`, {
+      method: "GET",
+    });
+    console.log(314);
+    console.log(response);
+    if (response.ok) {
+      const counters = await response.json();
+      return counters;
+    } else {
+      const errMessage = await response.json();
+      throw errMessage;
+    }
+  } catch (error) {
+    if (error.hasOwnProperty("error")) {
+      throw error;
+    } else {
+      throw { error: "Cannot parse server response" };
+    }
+  }
+}
 
 const API = {
   login,
@@ -384,6 +407,7 @@ const API = {
   getServicesByCounterId,
   setOperatingTicket,
   setCloseTicket,
+  getCountersDetails,
 };
 
 export default API;

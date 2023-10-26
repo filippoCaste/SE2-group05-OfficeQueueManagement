@@ -15,6 +15,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 
+import API from './../API';
+
 function createData(service, ticketId, estimatedTime) {
   return { service, ticketId, estimatedTime };
 }
@@ -85,23 +87,44 @@ function CounterCard(props) {
 }
 
 function CountersBord() {
-  const countersData = [
-    {
-      counterNum: 1,
-      services: ['Account Management', 'Shipping'],
-      currentlyServing: 135,
-    },
-    {
-      counterNum: 2,
-      services: ['Shipping'],
-      currentlyServing: 124,
-    },
-    {
-      counterNum: 3,
-      services: ['Payment', 'Other operations'],
-      currentlyServing: 182,
-    },
-  ];
+  const [countersData, setCountersData] = useState([]);
+
+  useEffect(() => {
+    API.getCountersDetails().then((c) => {
+      const temp = [];
+      Object.entries(c).map(([key, value]) => {
+        const services = [];
+        value.map((c) => {
+          services.push(c.servicename);
+        });
+
+        temp.push({
+          counterNum: key,
+          services,
+          currentlyServing: 135,
+        });
+      });
+      console.log(temp);
+      setCountersData(temp);
+    });
+  }, []);
+  // const countersData = [
+  //   {
+  //     counterNum: 1,
+  //     services: ['Account Management', 'Shipping'],
+  //     currentlyServing: 135,
+  //   },
+  //   {
+  //     counterNum: 2,
+  //     services: ['Shipping'],
+  //     currentlyServing: 124,
+  //   },
+  //   {
+  //     counterNum: 3,
+  //     services: ['Payment', 'Other operations'],
+  //     currentlyServing: 182,
+  //   },
+  // ];
 
   return (
     <>
