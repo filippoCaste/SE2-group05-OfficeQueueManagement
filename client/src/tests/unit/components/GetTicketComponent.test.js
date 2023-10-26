@@ -22,8 +22,10 @@ describe('GetTicketComponent', () => {
   
   test('selects a service and prints a ticket', async () => {
     const numberTicket = '1';
+    const noPeopleBefore = '0';
     const listServices = [{ id: 1, serviceName: 'Service 1' }];
-    render(<GetTicketComponent listServices={listServices} numberTicket={numberTicket}/>);
+
+    render(<GetTicketComponent listServices={listServices} />);
     
     const service1 = screen.getByText('Service 1');
     fireEvent.click(service1);
@@ -38,6 +40,7 @@ describe('GetTicketComponent', () => {
       expect(ticketNumber).toBeInTheDocument();
       expect(ticketNumber).toHaveTextContent(numberTicket);
       expect(peopleBefore).toBeInTheDocument();
+      expect(peopleBefore).toHaveTextContent(noPeopleBefore);
     });
   });
   
