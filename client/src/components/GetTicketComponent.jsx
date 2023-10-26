@@ -50,6 +50,8 @@ function GetTicketComponent(props) {
 
   return (
     <>
+      <h2>Counters Bord</h2>
+      <CountersBord />
       <h2> Choose Your Service </h2>
 
       <List>

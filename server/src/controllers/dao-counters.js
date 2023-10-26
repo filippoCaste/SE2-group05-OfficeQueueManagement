@@ -109,6 +109,7 @@ exports.getTicketByCounterId = (counterid) => {
         });
     });
 };
+
 /**
  * @returns Counters with services
  */

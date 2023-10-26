@@ -140,12 +140,15 @@ async function getCounterById(id) {
   const question = await response.json();
 
   if (response.ok) {
-    const e = question;
-    return { id_counter: e.id_counter };
-  } else {
-    throw question;
+    if (response.ok) {
+      const e = question;
+      return { id_counter: e.id_counter };
+    } else {
+      throw question;
+    }
   }
 }
+
 async function getServicesByCounterId(counterid) {
   const response = await fetch(SERVER_URL + `/counters/${counterid}/services`);
   const services = await response.json();
