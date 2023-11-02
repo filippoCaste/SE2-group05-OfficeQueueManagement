@@ -49,7 +49,7 @@ On "Call the next user" and "See the next number" we instead focused on code rev
   | Description | Estimated | Actual |
   | ----- | ------- | ------ |
   | Hours per task average |2.5 |1.72 |
-  |Standard Deviation | 9.93| 7.56 |
+  |Standard Deviation (h) | 9.93| 7.56 |
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1 = 0.47
 >We hope we can be better next time.
